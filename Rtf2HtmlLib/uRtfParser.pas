@@ -1,4 +1,4 @@
-unit uRtfParser;
+﻿unit uRtfParser;
 
 interface
 
@@ -137,8 +137,8 @@ begin
       Completed := (CharsUsed = ByteCount);
       exit;
     end;
-      // Try again with 1/2 the count, won't flush then 'cause won't read it all
-      BytesUsed := BytesUsed div 2;
+    // Try again with 1/2 the count, won't flush then 'cause won't read it all
+    BytesUsed := BytesUsed div 2;
   end;
 
   // Oops, we didn't have anything, we'll have to throw an overflow
@@ -166,54 +166,54 @@ end;
 
 function TRtfParser.HandleTag(reader: TStringReader; tag: TRtfTag): boolean;
 
-function HandleTagUnicodeCode(skippedcontent: boolean): boolean;
-var
-  i: integer;
-  uchar, nextchar, secondchar: char;
-begin
-  result := skippedcontent;
-	uchar := char(tag.ValueAsNumber);
-	fCurText.Append(uchar);
-  // skip over the indicated number of 'alternative representation' text
-  i := 0;
-  while i < fUnicodeSkipCount do
+  function HandleTagUnicodeCode(skippedcontent: boolean): boolean;
+  var
+    i: integer;
+    uchar, nextchar, secondchar: char;
   begin
-    nextchar := char(PeekNextChar(reader, true));
-    case nextchar of
-      #10,#13,#32:
-      begin
-        reader.Read; // consume peeked char
-        result := true;
-        if i = 0 then
-          Dec(i);
-          // the first whitespace after the tag
-					// -> only a delimiter, doesn't count for skipping ...
-      end;
-      '\':
-      begin
-        reader.Read; // consume peeked char
-        result := true;
-        secondchar := char(ReadOneByte(reader)); // mandatory
-        if secondchar = #39 then
+    result := skippedcontent;
+    uchar := char(tag.ValueAsNumber);
+    fCurText.Append(uchar);
+    // skip over the indicated number of 'alternative representation' text
+    i := 0;
+    while i < fUnicodeSkipCount do
+    begin
+      nextchar := char(PeekNextChar(reader, true));
+      case nextchar of
+        #10,#13,#32:
         begin
-          // ok, this is a hex-encoded 'byte' -> need to consume both
-					// hex digits too
-					ReadOneByte(reader); // high nibble
-					ReadOneByte(reader); // low nibble
+          reader.Read; // consume peeked char
+          result := true;
+          if i = 0 then
+            Dec(i);
+          // the first whitespace after the tag
+          // -> only a delimiter, doesn't count for skipping ...
         end;
-      end;
-      '{', '}':
-        // don't consume peeked char and abort skipping
-        i := fUnicodeSkipCount;
+        '\':
+        begin
+          reader.Read; // consume peeked char
+          result := true;
+          secondchar := char(ReadOneByte(reader)); // mandatory
+          if secondchar = #39 then
+          begin
+            // ok, this is a hex-encoded 'byte' -> need to consume both
+            // hex digits too
+            ReadOneByte(reader); // high nibble
+            ReadOneByte(reader); // low nibble
+          end;
+        end;
+        '{', '}':
+          // don't consume peeked char and abort skipping
+          i := fUnicodeSkipCount;
       else
       begin
         reader.Read; // consume peeked char
         result := true;
       end;
+      end;
+      Inc(i);
     end;
-    Inc(i);
   end;
-end;
 
 var
   detectfontname, skippedcontent: boolean;
@@ -239,7 +239,6 @@ begin
   end;
 
   if detectfontname then
-  begin
     if tagname = TagFont then
     begin
       if fFontTableStartLevel > 0 then
@@ -252,31 +251,24 @@ begin
     end
     else
     if tagname = TagFontTable then
-    begin
-      // -> remember we're in the font-table definition
-      fFontTableStartLevel := fLevel;
-    end;
-  end;
+      fFontTableStartLevel := fLevel// -> remember we're in the font-table definition
+  ;
 
   if not fTargetFont.IsEmpty then
-  begin
     if TagFontCharset.Equals(tagname) then
     begin
-			charset := tag.ValueAsNumber;
-			codepage := GetCodePage(charset);
+      charset := tag.ValueAsNumber;
+      codepage := GetCodePage(charset);
       if fFontToCodePageMapping.ContainsKey(fTargetFont) then
         fFontToCodePageMapping[fTargetFont] := codepage
       else
         fFontToCodePageMapping.Add(fTargetFont, codepage);
       UpdateEncoding(codepage);
     end;
-  end;
 
   if (fFontToCodePageMapping.Count > 0) and (tagname = TagFont) then
-  begin
     if fFontToCodePageMapping.TryGetValue(tag.FullName, codepage) then
       UpdateEncoding(codePage);
-  end;
 
   skippedcontent := false;
   if tagname = TagUnicodeCode then
@@ -425,19 +417,19 @@ var
 begin
   // NOTE: the handling of multi-byte encodings is probably not the most efficient here ...
 
-	completed := false;
-	byteindex := 0;
-	while not completed do
+  completed := false;
+  byteindex := 0;
+  while not completed do
   begin
-		fByteDecodingBuffer[byteIndex] := ReadOneByte(reader);
-		Inc(byteindex);
+    fByteDecodingBuffer[byteIndex] := ReadOneByte(reader);
+    Inc(byteindex);
     ByteConvert(fByteDecodingBuffer, 0, byteindex, fCharDecodingBuffer, 0, 1,
-			usedbytes, usedchars, completed);
-		if (completed and ((usedbytes <> byteindex) or (usedChars <> 1))) then
+      usedbytes, usedchars, completed);
+    if (completed and ((usedbytes <> byteindex) or (usedChars <> 1))) then
       raise ERtfMultiByteEncoding.Create(
-      InvalidMultiByteEncoding(fByteDecodingBuffer, byteindex, fEncoding));
-	end;
-	result := fCharDecodingBuffer[0];
+        InvalidMultiByteEncoding(fByteDecodingBuffer, byteindex, fEncoding));
+  end;
+  result := fCharDecodingBuffer[0];
 end;
 
 procedure TRtfParser.DecodeCurrentHexBuffer;
@@ -481,7 +473,7 @@ begin
     UpdateEncoding(AnsiCodePage)
   else
   if tag.Name = TagEncodingMac then
-		UpdateEncoding(10000)
+    UpdateEncoding(10000)
   else
   if tag.Name = TagEncodingPc then
     UpdateEncoding(437)
@@ -518,23 +510,23 @@ var
 begin
   fUnicodeSkipCountStack.Clear;
   fCodePageStack.Clear;
-	fUnicodeSkipCount := 1;
-	fLevel := 0;
-	fTagCountAtLastGroupStart := 0;
-	fTagCount := 0;
-	fFontTableStartLevel := -1;
-	fTargetFont := '';
-	fExpectingThemeFont := false;
-	fFontToCodePageMapping.Clear;
-	fHexDecodingBuffer.Clear;
-	UpdateEncoding(AnsiCodePage);
-	fGroupCount := 0;
+  fUnicodeSkipCount := 1;
+  fLevel := 0;
+  fTagCountAtLastGroupStart := 0;
+  fTagCount := 0;
+  fFontTableStartLevel := -1;
+  fTargetFont := '';
+  fExpectingThemeFont := false;
+  fFontToCodePageMapping.Clear;
+  fHexDecodingBuffer.Clear;
+  UpdateEncoding(AnsiCodePage);
+  fGroupCount := 0;
   backslash := false;
   nextchar := PeekNextChar(reader, false);
   while nextchar <> eof do
   begin
     peekchar := 0;
-		peekcharvalid := false;
+    peekcharvalid := false;
     case Char(nextchar) of
       '\':
       begin
@@ -543,65 +535,60 @@ begin
         secondchar := PeekNextChar(reader, true);
         case Char(secondchar) of
           '\', '{', '}':
-            begin
-              fCurText.Append(ReadOneChar(reader)); // must still consume the 'peek'ed char
-            end;
+            fCurText.Append(ReadOneChar(reader));// must still consume the 'peek'ed char
+
 
           #10, #13:
-            begin
-              reader.Read; // must still consume the 'peek'ed char
-              // must be treated as a 'par' tag if preceded by a backslash
-              // (see RTF spec page 144)
-              HandleTag(reader, TRtfTag.Create(TagParagraph));
-            end;
+          begin
+            reader.Read; // must still consume the 'peek'ed char
+            // must be treated as a 'par' tag if preceded by a backslash
+            // (see RTF spec page 144)
+            HandleTag(reader, TRtfTag.Create(TagParagraph));
+          end;
 
           #39:
+          begin
+            reader.Read; // must still consume the 'peek'ed char
+            hex1 := ReadOneByte(reader);
+            hex2 := ReadOneByte(reader);
+            if not IsHexDigit(hex1) then
+              raise ERtfHexEncoding.CreateFmt('Invalid first hex digit: %s', [hex1]);
+            if not IsHexDigit(hex2) then
+              raise ERtfHexEncoding.CreateFmt('Invalid second hex digit: %s', [hex2]);
+            decodedbyte := StrToInt('$' + Chr(hex1) + Chr(hex2));
+            fHexDecodingBuffer.WriteData(decodedbyte);
+            peekchar := PeekNextChar(reader, false);
+            peekcharvalid := true;
+            mustflush := true;
+            if peekchar = Ord('\') then
             begin
-              reader.Read; // must still consume the 'peek'ed char
-              hex1 := ReadOneByte(reader);
-              hex2 := ReadOneByte(reader);
-              if not IsHexDigit(hex1) then
-                raise ERtfHexEncoding.CreateFmt('Invalid first hex digit: %s', [hex1]);
-              if not IsHexDigit(hex2) then
-                raise ERtfHexEncoding.CreateFmt('Invalid second hex digit: %s', [hex2]);
-              decodedbyte := StrToInt('$' + Chr(hex1) + Chr(hex2));
-              fHexDecodingBuffer.WriteData(decodedbyte);
-              peekchar := PeekNextChar(reader, false);
-              peekcharvalid := true;
-              mustflush := true;
-              if peekchar = Ord('\') then
-              begin
-                reader.Read;
-                backslash := true;
-                if PeekNextChar(reader, false) = 39 then
-                  mustflush := false;
-              end;
-              if mustflush then
-              begin
-                // we may _NOT_ handle hex content in a character-by-character way as
-                // this results in invalid text for japanese/chinese content ...
-                // -> we wait until the following content is non-hex and then flush the
-                //    pending data. ugly but necessary with our decoding model.
-                DecodeCurrentHexBuffer;
-              end;
+              reader.Read;
+              backslash := true;
+              if PeekNextChar(reader, false) = 39 then
+                mustflush := false;
             end;
+            if mustflush then
+              DecodeCurrentHexBuffer// we may _NOT_ handle hex content in a character-by-character way as
+              // this results in invalid text for japanese/chinese content ...
+              // -> we wait until the following content is non-hex and then flush the
+              //    pending data. ugly but necessary with our decoding model.
+            ;
+          end;
 
           '|', '~', '-', '_', ':', '*':
-            begin
-              HandleTag(reader, TRtfTag.Create(ReadOneChar(reader))); // must still consume the 'peek'ed char
-            end;
+            HandleTag(reader, TRtfTag.Create(ReadOneChar(reader)));// must still consume the 'peek'ed char
 
-          else
-            ParseTag(reader);
+
+        else
+          ParseTag(reader);
         end;
       end;
 
-    #10, #13:
-      begin
-        reader.Read; // must still consume the 'peek'ed char
-      end;
+      #10, #13:
+        reader.Read;// must still consume the 'peek'ed char
 
-    #9:
+
+      #9:
       begin
         reader.Read; // must still consume the 'peek'ed char
         // should be treated as a 'tab' tag (see RTF spec page 144)
@@ -611,46 +598,46 @@ begin
       begin
         reader.Read;
         FlushText;
-				NotifyGroupBegin;
-				fTagCountAtLastGroupStart := fTagCount;
-				fUnicodeSkipCountStack.Push(fUnicodeSkipCount);
-				fCodePageStack.Push(IfThen(Assigned(fEncoding), fEncoding.CodePage));
-				Inc(fLevel);
+        NotifyGroupBegin;
+        fTagCountAtLastGroupStart := fTagCount;
+        fUnicodeSkipCountStack.Push(fUnicodeSkipCount);
+        fCodePageStack.Push(IfThen(Assigned(fEncoding), fEncoding.CodePage));
+        Inc(fLevel);
       end;
       '}':
       begin
         reader.Read;
         FlushText;
-				if fLevel > 0 then
+        if fLevel > 0 then
         begin
-					fUnicodeSkipCount := fUnicodeSkipCountStack.Pop;
-					if fFontTableStartLevel = fLevel then
-					begin
-						fFontTableStartLevel := -1;
-						fTargetFont := '';
-						fExpectingThemeFont := false;
+          fUnicodeSkipCount := fUnicodeSkipCountStack.Pop;
+          if fFontTableStartLevel = fLevel then
+          begin
+            fFontTableStartLevel := -1;
+            fTargetFont := '';
+            fExpectingThemeFont := false;
           end;
-					UpdateEncoding(fCodePageStack.Pop);
-					Dec(fLevel);
-					NotifyGroupEnd;
-					Inc(fGroupCount);
-				end
-				else
+          UpdateEncoding(fCodePageStack.Pop);
+          Dec(fLevel);
+          NotifyGroupEnd;
+          Inc(fGroupCount);
+        end
+        else
           raise ERtfBraceNesting.Create(sToManyBraces);
       end;
-      else
-        fCurText.Append(ReadOneChar(reader));
+    else
+      fCurText.Append(ReadOneChar(reader));
     end; // case
     if (fLevel = 0) and IgnoreContentAfterRootGroup then
-			 break;
+      break;
 
     if peekcharvalid then
-			nextchar := peekchar
-		else
-		begin
+      nextchar := peekchar
+    else
+    begin
       nextChar := PeekNextChar(reader, false);
       backslash := false;
-		end;
+    end;
   end; // while
   FlushText;
   fCurText.Clear;

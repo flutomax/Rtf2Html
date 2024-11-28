@@ -1,4 +1,4 @@
-unit uRtfBuilders;
+﻿unit uRtfBuilders;
 
 interface
 
@@ -224,12 +224,12 @@ end;
 procedure TRtfFontBuilder.DoVisitTag(tag: TRtfTag);
 begin
   case IndexStr(tag.Name, [TagFont, TagFontKindNil, TagFontKindRoman,
-    TagFontKindSwiss, TagFontKindModern, TagFontKindScript, TagFontKindDecor,
-    TagFontKindTech, TagFontKindBidi, TagFontCharset, TagCodePage, TagFontPitch]) of
+      TagFontKindSwiss, TagFontKindModern, TagFontKindScript, TagFontKindDecor,
+      TagFontKindTech, TagFontKindBidi, TagFontCharset, TagCodePage, TagFontPitch]) of
     0:
     begin
-    fFontId := tag.FullName;
-    fFontIndex := tag.ValueAsNumber;
+      fFontId := tag.FullName;
+      fFontIndex := tag.ValueAsNumber;
     end;
     1: fFontKind := rfkNil;
     2: fFontKind := rfkRoman;
@@ -291,9 +291,7 @@ begin
     BuildFontFromGroup(AGroup)
   else
   if AGroup.Destination = TagFontTable then
-  begin
     if AGroup.Contents.Count > 1 then
-    begin
       if AGroup.Contents[1].Kind = ekGroup then
         VisitGroupChildren(AGroup)
       else
@@ -310,8 +308,6 @@ begin
           end;
         end;
       end;
-    end;
-  end;
 end;
 
 procedure TRtfFontTableBuilder.BuildFontFromGroup(AGroup: TRtfGroup);
@@ -431,7 +427,7 @@ end;
 procedure TRtfTimestampBuilder.DoVisitTag(ATag: TRtfTag);
 begin
   case IndexStr(ATag.Name, [TagInfoYear, TagInfoMonth, TagInfoDay, TagInfoHour,
-    TagInfoMinute, TagInfoSecond]) of
+      TagInfoMinute, TagInfoSecond]) of
     0: fYear := ATag.ValueAsNumber;
     1: fMonth := ATag.ValueAsNumber;
     2: fDay := ATag.ValueAsNumber;
@@ -466,17 +462,17 @@ end;
 procedure TRtfDocumentInfoBuilder.DoVisitGroup(AGroup: TRtfGroup);
 begin
   case IndexStr(AGroup.Destination, [TagInfo, TagInfoTitle, TagInfoSubject,
-  TagInfoAuthor, TagInfoManager, TagInfoCompany, TagInfoOperator,
-  TagInfoCategory, TagInfoKeywords, TagInfoComment, TagInfoDocumentComment,
-  TagInfoHyperLinkBase, TagInfoCreationTime, TagInfoRevisionTime,
-  TagInfoPrintTime, TagInfoBackupTime]) of
+      TagInfoAuthor, TagInfoManager, TagInfoCompany, TagInfoOperator,
+      TagInfoCategory, TagInfoKeywords, TagInfoComment, TagInfoDocumentComment,
+      TagInfoHyperLinkBase, TagInfoCreationTime, TagInfoRevisionTime,
+      TagInfoPrintTime, TagInfoBackupTime]) of
     0: VisitGroupChildren(AGroup);
     1: fInfo.Title := ExtractGroupText(AGroup);
     2: fInfo.Subject := ExtractGroupText(AGroup);
     3: fInfo.Author := ExtractGroupText(AGroup);
     4: fInfo.Manager := ExtractGroupText(AGroup);
     5: fInfo.Company := ExtractGroupText(AGroup);
-    6: fInfo.Operator := ExtractGroupText(AGroup);
+    6: fInfo.operator := ExtractGroupText(AGroup);
     7: fInfo.Category := ExtractGroupText(AGroup);
     8: fInfo.Keywords := ExtractGroupText(AGroup);
     9: fInfo.Comment := ExtractGroupText(AGroup);
@@ -492,8 +488,8 @@ end;
 procedure TRtfDocumentInfoBuilder.DoVisitTag(ATag: TRtfTag);
 begin
   case IndexStr(ATag.Name, [TagInfoVersion, TagInfoRevision,
-    TagInfoNumberOfPages, TagInfoNumberOfWords, TagInfoNumberOfChars,
-    TagInfoId, TagInfoEditingTimeMinutes]) of
+      TagInfoNumberOfPages, TagInfoNumberOfWords, TagInfoNumberOfChars,
+      TagInfoId, TagInfoEditingTimeMinutes]) of
     0: fInfo.Version := ATag.ValueAsNumber;
     1: fInfo.Revision := ATag.ValueAsNumber;
     2: fInfo.NumberOfPages := ATag.ValueAsNumber;
@@ -551,32 +547,32 @@ end;
 procedure TRtfUserPropertyBuilder.DoVisitGroup(AGroup: TRtfGroup);  var s: string;
 begin
   case IndexStr(AGroup.Destination, [TagUserProperties, string.Empty,
-    TagUserPropertyName, TagUserPropertyValue, TagUserPropertyLink]) of
+      TagUserPropertyName, TagUserPropertyValue, TagUserPropertyLink]) of
     0: VisitGroupChildren(AGroup);
     1:
-      begin
-        Reset;
-        VisitGroupChildren(AGroup);
-        fCollectedProperties.Add(CreateProperty);
-      end;
+    begin
+      Reset;
+      VisitGroupChildren(AGroup);
+      fCollectedProperties.Add(CreateProperty);
+    end;
     2:
-      begin
-        fTextBuilder.Reset;
-        fTextBuilder.VisitGroup(AGroup);
-        fPropertyName := fTextBuilder.CombinedText;
-      end;
+    begin
+      fTextBuilder.Reset;
+      fTextBuilder.VisitGroup(AGroup);
+      fPropertyName := fTextBuilder.CombinedText;
+    end;
     3:
-      begin
-        fTextBuilder.Reset;
-        fTextBuilder.VisitGroup(AGroup);
-        fStaticValue := fTextBuilder.CombinedText;
-      end;
+    begin
+      fTextBuilder.Reset;
+      fTextBuilder.VisitGroup(AGroup);
+      fStaticValue := fTextBuilder.CombinedText;
+    end;
     4:
-      begin
-        fTextBuilder.Reset;
-        fTextBuilder.VisitGroup(AGroup);
-        fLinkValue := fTextBuilder.CombinedText;
-      end;
+    begin
+      fTextBuilder.Reset;
+      fTextBuilder.VisitGroup(AGroup);
+      fLinkValue := fTextBuilder.CombinedText;
+    end;
   end;
 end;
 
@@ -618,36 +614,36 @@ end;
 procedure TRtfImageBuilder.DoVisitTag(tag: TRtfTag);
 begin
   case IndexStr(tag.Name, [TagPictureFormatWinDib, TagPictureFormatWinBmp,
-  TagPictureFormatEmf, TagPictureFormatJpg, TagPictureFormatPng,
-  TagPictureFormatWmf, TagPictureWidth, TagPictureHeight, TagPictureWidthGoal,
-  TagPictureHeightGoal, TagPictureWidthScale, TagPictureHeightScale]) of
+      TagPictureFormatEmf, TagPictureFormatJpg, TagPictureFormatPng,
+      TagPictureFormatWmf, TagPictureWidth, TagPictureHeight, TagPictureWidthGoal,
+      TagPictureHeightGoal, TagPictureWidthScale, TagPictureHeightScale]) of
     0, 1: fFormat := rifBmp;
     2: fFormat := rifEmf;
     3: fFormat := rifJpg;
     4: fFormat := rifPng;
     5: fFormat := rifWmf;
     6:
-      begin
-        fWidth := Abs(tag.ValueAsNumber);
-        fDesiredWidth := fWidth;
-      end;
+    begin
+      fWidth := Abs(tag.ValueAsNumber);
+      fDesiredWidth := fWidth;
+    end;
     7:
-      begin
-        fHeight := Abs(tag.ValueAsNumber);
-        fDesiredHeight := fHeight;
-      end;
+    begin
+      fHeight := Abs(tag.ValueAsNumber);
+      fDesiredHeight := fHeight;
+    end;
     8:
-      begin
-        fDesiredWidth := Abs(tag.ValueAsNumber);
-        if fWidth = 0 then
-          fWidth := fDesiredWidth;
-      end;
+    begin
+      fDesiredWidth := Abs(tag.ValueAsNumber);
+      if fWidth = 0 then
+        fWidth := fDesiredWidth;
+    end;
     9:
-      begin
-        fDesiredHeight := Abs(tag.ValueAsNumber);
-        if fHeight = 0 then
-          fHeight := fDesiredHeight;
-      end;
+    begin
+      fDesiredHeight := Abs(tag.ValueAsNumber);
+      if fHeight = 0 then
+        fHeight := fDesiredHeight;
+    end;
     10: fScaleWidthPercent := Abs(tag.ValueAsNumber);
     11: fScaleHeightPercent := Abs(tag.ValueAsNumber);
   end;

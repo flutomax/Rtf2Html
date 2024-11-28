@@ -1,4 +1,4 @@
-unit uRtfInterpreterContext;
+﻿unit uRtfInterpreterContext;
 
 interface
 

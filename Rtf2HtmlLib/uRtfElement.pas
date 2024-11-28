@@ -1,4 +1,4 @@
-unit uRtfElement;
+﻿unit uRtfElement;
 
 interface
 
@@ -200,7 +200,7 @@ procedure TRtfElement.Visit(visitor: TRtfElementVisitor);
 begin
   if visitor = nil then
     raise EArgumentNilException.Create(sNilVisitor);
-	DoVisit(visitor);
+  DoVisit(visitor);
 end;
 
 function TRtfElement.ComputeHashCode: integer;
@@ -245,26 +245,24 @@ var
 begin
   result := '';
   if fContents.Count > 0 then
-	begin
-		first_el := fContents[0];
+  begin
+    first_el := fContents[0];
     if first_el.Kind = ekTag then
     begin
-			first_tag := first_el as TRtfTag;
+      first_tag := first_el as TRtfTag;
       if TagExtensionDestination = first_tag.Name then
-			begin
-				if fContents.Count > 1 then
+        if fContents.Count > 1 then
         begin
           second_el := fContents[1];
-					if second_el.Kind = ekTag then
-					begin
-						second_tag := second_el as TRtfTag;
-						exit(second_tag.Name);
-					end;
-				end;
-			end;
-			result := first_tag.Name;
-		end;
-	end;
+          if second_el.Kind = ekTag then
+          begin
+            second_tag := second_el as TRtfTag;
+            exit(second_tag.Name);
+          end;
+        end;
+      result := first_tag.Name;
+    end;
+  end;
 end;
 
 function TRtfGroup.GetIsExtensionDestination: Boolean;
@@ -318,7 +316,7 @@ begin
     if fContents.Count > 1 then
     begin
       result := Format('%s, %s', [result, fContents[1].ToString]);
-			if fContents.Count > 2 then
+      if fContents.Count > 2 then
       begin
 
         if fContents.Count > 3 then
@@ -326,7 +324,7 @@ begin
         result := Format('%s %s', [result, fContents[fContents.Count - 1].ToString]);
       end;
     end;
-		result := Format('%s]', [result]);
+    result := Format('%s]', [result]);
   end;
   result := Format('%s}', [result]);
 end;
@@ -359,7 +357,7 @@ begin
   if not (obj is TRtfText) then
     exit;
   compare := obj as TRtfText;
-	result := Assigned(compare) and (inherited IsEqual(obj)) and
+  result := Assigned(compare) and (inherited IsEqual(obj)) and
     fText.Equals(compare.text);
 end;
 
@@ -374,7 +372,7 @@ begin
   fName := aName;
   fFullName := aName;
   fValueAsText := '';
-	fValueAsNumber := -1;
+  fValueAsNumber := -1;
 end;
 
 constructor TRtfTag.Create(const aName, aValue: string);
@@ -384,7 +382,7 @@ begin
     raise EArgumentException.Create(sEmptyValue);
   fFullName := aName + aValue;
   fValueAsText := aValue;
-	fValueAsNumber := StrToIntDef(aValue, -1);
+  fValueAsNumber := StrToIntDef(aValue, -1);
 end;
 
 destructor TRtfTag.Destroy;
@@ -415,7 +413,7 @@ begin
   if not (obj is TRtfTag) then
     exit;
   compare := obj as TRtfTag; // guaranteed to be non-null
-	result := Assigned(compare) and inherited IsEqual(obj) and
+  result := Assigned(compare) and inherited IsEqual(obj) and
     fFullName.Equals(compare.fFullName);
 end;
 

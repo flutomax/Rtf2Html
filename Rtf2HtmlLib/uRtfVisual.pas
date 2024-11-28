@@ -1,4 +1,4 @@
-unit uRtfVisual;
+﻿unit uRtfVisual;
 
 interface
 
@@ -313,9 +313,9 @@ var
 begin
   compare := TRtfVisualText(obj); // guaranteed to be non-nil
   Result := (compare <> nil) and
-            inherited IsEqual(compare) and
-            (fText = compare.fText) and
-            (fFormat = compare.fFormat);
+    inherited IsEqual(compare) and
+    (fText = compare.fText) and
+    (fFormat = compare.fFormat);
 end;
 
 procedure TRtfVisualText.Assign(Source: TPersistent);
@@ -376,9 +376,7 @@ procedure TRtfVisualSpecialChar.Assign(Source: TPersistent);
 begin
   inherited;
   if Source is TRtfVisualSpecialChar then
-  begin
     fCharKind := TRtfVisualSpecialChar(Source).fCharKind;
-  end;
 end;
 
 function TRtfVisualSpecialChar.ComputeHashCode: Integer;
@@ -429,9 +427,7 @@ procedure TRtfVisualBreak.Assign(Source: TPersistent);
 begin
   inherited;
   if Source is TRtfVisualBreak then
-  begin
     fBreakKind := TRtfVisualBreak(Source).fBreakKind;
-  end;
 end;
 
 function TRtfVisualBreak.ComputeHashCode: Integer;
@@ -534,10 +530,10 @@ function TRtfVisualImage.ToString: string;
 begin
   Result := Format('[%s: %s, %d x %d (%d x %d) {%d%% x %d%%} : %d bytes]',
     [GetEnumName(TypeInfo(TRtfImageFormat), Ord(fImgFormat)),
-     GetEnumName(TypeInfo(TRtfTextAlignment), Ord(fAlignment)),
-     fWidth, fHeight, fDesiredWidth, fDesiredHeight,
-     fScaleWidthPercent, fScaleHeightPercent,
-     Length(fImageDataHex) div 2]);
+    GetEnumName(TypeInfo(TRtfTextAlignment), Ord(fAlignment)),
+    fWidth, fHeight, fDesiredWidth, fDesiredHeight,
+    fScaleWidthPercent, fScaleHeightPercent,
+    Length(fImageDataHex) div 2]);
 end;
 
 function TRtfVisualImage.ComputeHashCode: Integer;
@@ -582,9 +578,7 @@ procedure TRtfVisualTable.Assign(Source: TPersistent);
 begin
   inherited;
   if Source is TRtfVisualTable then
-  begin
     fRows.Assign(TRtfVisualTable(Source).fRows);
-  end;
 end;
 
 procedure TRtfVisualTable.DoVisit(AVisitor: TRtfVisualVisitor);
@@ -617,7 +611,7 @@ var
 begin
   Compare := TRtfVisualTable(AObj);
   Result := (Compare <> nil) and inherited IsEqual(Compare)
-  and (fRows.Count = Compare.fRows.Count);
+    and (fRows.Count = Compare.fRows.Count);
 end;
 
 function TRtfVisualTable.ToString: string;

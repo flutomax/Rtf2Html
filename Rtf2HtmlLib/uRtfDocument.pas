@@ -1,4 +1,4 @@
-unit uRtfDocument;
+﻿unit uRtfDocument;
 
 interface
 
@@ -101,5 +101,3 @@ begin
 end;
 
 end.
-
-

@@ -1,4 +1,4 @@
-unit uRtfHtmlConverter;
+﻿unit uRtfHtmlConverter;
 
 interface
 
@@ -171,7 +171,7 @@ end;
 
 procedure TRtfHtmlConverter.OnLeaveVisual(visual: TRtfVisual);
 begin
-// nothin
+  // nothin
 end;
 
 function TRtfHtmlConverter.EnsureOpenList(visual: TRtfVisual): boolean;
@@ -183,15 +183,15 @@ begin
   if (not (visual is TRtfVisualText)) or (not fIsInParagraphNumber) then
     exit;
   Text := visual as TRtfVisualText;
-	if not IsInList then
+  if not IsInList then
   begin
-		unsorted := UnsortedListValue = Text.Text;
-		if unsorted then
-			RenderUlTag
-		else
-			RenderOlTag;
-	end;
-	RenderLiTag;
+    unsorted := UnsortedListValue = Text.Text;
+    if unsorted then
+      RenderUlTag
+    else
+      RenderOlTag;
+  end;
+  RenderLiTag;
   result := true;
 end;
 
@@ -209,8 +209,8 @@ begin
   result := false;
   if EnsureOpenList(visual) then
     exit;
-	EnsureClosedList(visual);
-	result := OnEnterVisual(visual);
+  EnsureClosedList(visual);
+  result := OnEnterVisual(visual);
 end;
 
 function TRtfHtmlConverter.GetHtmlStyle(visual: TRtfVisual): TRtfHtmlStyle;
@@ -322,7 +322,7 @@ begin
   content := 'text/html';
   if not fSettings.CharacterSet.IsEmpty then
     content := Concat(content, '; charset=', fSettings.CharacterSet);
-	fWriter.AddAttribute(twaContent, content);
+  fWriter.AddAttribute(twaContent, content);
   RenderMetaTag;
   RenderEndTag;
 end;
@@ -331,9 +331,9 @@ procedure TRtfHtmlConverter.RenderMetaGenerator;
 begin
   if fGenerator.IsEmpty then
     exit;
-	fWriter.WriteLine;
-	fWriter.AddAttribute(twaName, 'generator');
-	fWriter.AddAttribute(twaContent, fGenerator);
+  fWriter.WriteLine;
+  fWriter.AddAttribute(twaName, 'generator');
+  fWriter.AddAttribute(twaContent, fGenerator);
   RenderMetaTag;
   RenderEndTag;
 end;
@@ -359,11 +359,11 @@ begin
     if s.IsEmpty then
       continue;
     fWriter.WriteLine;
-		fWriter.AddAttribute(twaHref, s);
-		fWriter.AddAttribute(twaType, 'text/css');
-		fWriter.AddAttribute(twaRel, 'stylesheet');
-		RenderLinkTag;
-		RenderEndTag;
+    fWriter.AddAttribute(twaHref, s);
+    fWriter.AddAttribute(twaType, 'text/css');
+    fWriter.AddAttribute(twaRel, 'stylesheet');
+    RenderLinkTag;
+    RenderEndTag;
   end;
 end;
 
@@ -372,9 +372,9 @@ begin
   if fSettings.Title.IsEmpty then
     exit;
   fWriter.WriteLine;
-	RenderTitleTag;
-	fWriter.Write(fSettings.Title);
-	RenderEndTag;
+  RenderTitleTag;
+  fWriter.Write(fSettings.Title);
+  RenderEndTag;
 end;
 
 procedure TRtfHtmlConverter.RenderStyles;
@@ -388,23 +388,23 @@ begin
   fWriter.WriteLine;
   RenderStyleTag;
 
-	first := true;
+  first := true;
   for style in fSettings.Styles do
   begin
-		if style.Properties.Count = 0 then
+    if style.Properties.Count = 0 then
       continue;
-		if not first then
-			fWriter.WriteLine;
+    if not first then
+      fWriter.WriteLine;
 
-		fWriter.WriteLine(style.SelectorName);
-		fWriter.WriteLine('{');
+    fWriter.WriteLine(style.SelectorName);
+    fWriter.WriteLine('{');
     with style.Properties do
       for i := 0 to Count - 1 do
         fWriter.WriteLine(Format('  %s: %s;', [Names[i], Values[Names[i]]]));
-		fWriter.Write('}');
-		first := false;
-	end;
-	RenderEndTag;
+    fWriter.Write('}');
+    first := false;
+  end;
+  RenderEndTag;
 end;
 
 procedure TRtfHtmlConverter.RenderStyleTag;
@@ -459,7 +459,7 @@ procedure TRtfHtmlConverter.RenderDocumentSection;
 begin
   if (fSettings.ConvertScope and hcsDocument) <> hcsDocument then
     exit;
-	RenderDocumentHeader;
+  RenderDocumentHeader;
 end;
 
 procedure TRtfHtmlConverter.RenderHtmlSection;
@@ -475,19 +475,19 @@ end;
 procedure TRtfHtmlConverter.RenderHeadAttributes;
 begin
   RenderMetaContentType;
-	RenderMetaGenerator;
-	RenderLinkStyleSheets;
+  RenderMetaGenerator;
+  RenderLinkStyleSheets;
 end;
 
 procedure TRtfHtmlConverter.RenderHeadSection;
 begin
   if (fSettings.ConvertScope and hcsHead) <> hcsHead then
     exit;
-	RenderHeadTag;
-	RenderHeadAttributes;
-	RenderTitle;
-	RenderStyles;
-	RenderEndTag(true);
+  RenderHeadTag;
+  RenderHeadAttributes;
+  RenderTitle;
+  RenderStyles;
+  RenderEndTag(true);
 end;
 
 procedure TRtfHtmlConverter.RenderBodySection;
@@ -602,16 +602,16 @@ var
   IsHyperlink: Boolean;
   href, htmltext: string;
 begin
-	if not EnterVisual(aVisualText) then
-	  exit;
-	// suppress hidden text
-	if (aVisualText.Format.IsHidden and (not settings.IsShowHiddenText)) then
+  if not EnterVisual(aVisualText) then
+    exit;
+  // suppress hidden text
+  if (aVisualText.Format.IsHidden and (not settings.IsShowHiddenText)) then
     exit;
 
-	TextFormat := aVisualText.Format;
+  TextFormat := aVisualText.Format;
   if not aVisualText.IsInTable then
     case TextFormat.Alignment of
-      rtaLeft: ; 	//fWriter.AddStyleAttribute(twsTextAlign, 'left');
+      rtaLeft: ;   //fWriter.AddStyleAttribute(twsTextAlign, 'left');
       rtaCenter:
         fWriter.AddStyleAttribute(twsTextAlign, 'center');
       rtaRight:
@@ -620,24 +620,24 @@ begin
         fWriter.AddStyleAttribute(twsTextAlign, 'justify');
     end;
 
-	if (not IsInListItem) and (not aVisualText.IsInTable) then
-		BeginParagraph(aVisualText.Indent);
+  if (not IsInListItem) and (not aVisualText.IsInTable) then
+    BeginParagraph(aVisualText.Indent);
 
-	// format tags
-	if TextFormat.IsBold then
-		RenderBTag;
+  // format tags
+  if TextFormat.IsBold then
+    RenderBTag;
 
-	if TextFormat.IsItalic then
-		RenderITag;
+  if TextFormat.IsItalic then
+    RenderITag;
 
-	if TextFormat.IsUnderline then
-		RenderUTag;
+  if TextFormat.IsUnderline then
+    RenderUTag;
 
-	if TextFormat.IsStrikeThrough then
-		RenderSTag;
+  if TextFormat.IsStrikeThrough then
+    RenderSTag;
 
-	// span with style
-	HtmlStyle := GetHtmlStyle(aVisualText);
+  // span with style
+  HtmlStyle := GetHtmlStyle(aVisualText);
   try
     if not HtmlStyle.IsEmpty then
     begin
@@ -698,7 +698,7 @@ begin
     if not HtmlStyle.Default then
       FreeAndNil(HtmlStyle);
   end;
-	LeaveVisual(aVisualText);
+  LeaveVisual(aVisualText);
 end;
 
 procedure TRtfHtmlConverter.DoVisitImage(aVisualImage: TRtfVisualImage);
@@ -728,9 +728,9 @@ begin
     aVisualImage.Height, aVisualImage.DesiredHeight, aVisualImage.ScaleHeightPercent);
 
   fWriter.AddAttribute(twaWidth, Width.ToString);
-	fWriter.AddAttribute(twaHeight, Height.ToString);
-	HtmlFileName := EncodeUrl(FileName);
-	fWriter.AddAttribute(twaSrc, HtmlFileName, false);
+  fWriter.AddAttribute(twaHeight, Height.ToString);
+  HtmlFileName := EncodeUrl(FileName);
+  fWriter.AddAttribute(twaSrc, HtmlFileName, false);
   RenderImgTag;
   RenderEndTag;
 
@@ -748,9 +748,9 @@ begin
   case aVisualSpecialChar.CharKind of
     rvsParagraphNumberBegin: fIsInParagraphNumber := true;
     rvsParagraphNumberEnd: fIsInParagraphNumber := false;
-    else
-      if fSpecialCharacters.ContainsKey(aVisualSpecialChar.CharKind) then
-        fWriter.Write(fSpecialCharacters[aVisualSpecialChar.CharKind]);
+  else
+    if fSpecialCharacters.ContainsKey(aVisualSpecialChar.CharKind) then
+      fWriter.Write(fSpecialCharacters[aVisualSpecialChar.CharKind]);
   end;
 
   LeaveVisual(aVisualSpecialChar);
@@ -775,7 +775,7 @@ begin
         fWriter.AddStyleAttribute(twsMargin, '0');
         BeginParagraph(aVisualBreak.Indent);
         // Uncomment if the height is not enough
-				//fWriter.Write(NonBreakingSpace);
+        //fWriter.Write(NonBreakingSpace);
         EndParagraph;
       end;
   end;
@@ -799,17 +799,15 @@ procedure TRtfHtmlConverter.DoVisitTable(aVisualTable: TRtfVisualTable);
           Exit(true);
       end
       else
-      begin
-        if cell.LeftEquals(value) then
-          Exit(true);
-      end;
+      if cell.LeftEquals(value) then
+        Exit(true);
     end;
   end;
 
   function FormatBorder(const Name: string; const B: TRtfCellBorder): string;
   begin
     result := Format('%s:%dpx solid %s;',
-    [Name, Max(TwipToPixel(B.Width), 1), ColorToHtml(B.Color)]);
+      [Name, Max(TwipToPixel(B.Width), 1), ColorToHtml(B.Color)]);
   end;
 
   function SetAlignment(Alignment: TRtfTextAlignment): boolean;
@@ -865,7 +863,7 @@ begin
 
     mw := TwipToPixel(pts.Last - pts.First);
     s := Format('margin-left:%d; border-collapse: collapse;', [TwipToPixel(pts.First)]);
-	  fWriter.AddAttribute(twaBorder, '0');
+    fWriter.AddAttribute(twaBorder, '0');
     fWriter.AddAttribute(twaWidth, mw.ToString);
     fWriter.AddAttribute(twaStyle, s);
     RenderBeginTag(twtTable);
@@ -976,9 +974,7 @@ begin
           end;
 
           if cell_def.BordersAreEquals then
-          begin
-            s := FormatBorder('border', cell_def.BorderLeft);
-          end
+            s := FormatBorder('border', cell_def.BorderLeft)
           else
           begin
             s := '';
@@ -1007,36 +1003,32 @@ begin
           if cell.DataList.Count = 0 then
             fWriter.Write(NonBreakingSpace)
           else
+          if cell.DataList.Count > 0 then
           begin
-            if cell.DataList.Count > 0 then
+            if cell.DataList[0] is TRtfVisualText then
             begin
-              if cell.DataList[0] is TRtfVisualText then
-              begin
-                vt := cell.DataList[0] as TRtfVisualText;
-                celldiv := SetAlignment(vt.Format.Alignment);
-              end;
-              if cell.DataList[0] is TRtfVisualImage then
-              begin
-                vi := cell.DataList[0] as TRtfVisualImage;
-                celldiv := SetAlignment(vi.Alignment);
-              end;
-              if celldiv then
-                RenderBeginTag(twtDiv);
+              vt := cell.DataList[0] as TRtfVisualText;
+              celldiv := SetAlignment(vt.Format.Alignment);
+            end;
+            if cell.DataList[0] is TRtfVisualImage then
+            begin
+              vi := cell.DataList[0] as TRtfVisualImage;
+              celldiv := SetAlignment(vi.Alignment);
+            end;
+            if celldiv then
+              RenderBeginTag(twtDiv);
 
-              for k := 0 to cell.DataList.Count - 1 do
-              begin
-                case TRtfVisual(cell.DataList[k]).Kind of
-                  rvkText: DoVisitText(cell.DataList[k] as TRtfVisualText);
-                  rvkBreak: DoVisitBreak(cell.DataList[k] as TRtfVisualBreak);
-                  rvkSpecial: DoVisitSpecial(cell.DataList[k] as TRtfVisualSpecialChar);
-                  rvkImage: DoVisitImage(cell.DataList[k] as TRtfVisualImage);
-                end;
+            for k := 0 to cell.DataList.Count - 1 do
+              case TRtfVisual(cell.DataList[k]).Kind of
+                rvkText: DoVisitText(cell.DataList[k] as TRtfVisualText);
+                rvkBreak: DoVisitBreak(cell.DataList[k] as TRtfVisualBreak);
+                rvkSpecial: DoVisitSpecial(cell.DataList[k] as TRtfVisualSpecialChar);
+                rvkImage: DoVisitImage(cell.DataList[k] as TRtfVisualImage);
               end;
-              if celldiv then
-              begin
-                RenderAssertTag(twtDiv);
-                RenderEndTag; // twtDiv
-              end;
+            if celldiv then
+            begin
+              RenderAssertTag(twtDiv);
+              RenderEndTag; // twtDiv
             end;
           end;
           RenderAssertTag(twtTd);

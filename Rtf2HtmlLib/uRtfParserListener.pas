@@ -1,4 +1,4 @@
-unit uRtfParserListener;
+﻿unit uRtfParserListener;
 
 interface
 
@@ -118,19 +118,19 @@ end;
 procedure TRtfParserListener.GroupBegin;
 begin
   DoGroupBegin;
-	inc(fLevel);
+  inc(fLevel);
 end;
 
 procedure TRtfParserListener.TagFound(tag: TRtfTag);
 begin
   if Assigned(tag) then
-		DoTagFound(tag);
+    DoTagFound(tag);
 end;
 
 procedure TRtfParserListener.TextFound(text: TRtfText);
 begin
   if Assigned(text) then
-		DoTextFound(text);
+    DoTextFound(text);
 end;
 
 procedure TRtfParserListener.GroupEnd;
@@ -180,14 +180,14 @@ begin
     fOpenGroupStack.Push(fCurGroup);
     fCurGroup.Contents.Add(newgroup);
   end;
-	fCurGroup := newGroup;
+  fCurGroup := newGroup;
 end;
 
 procedure TRtfParserListenerStructureBuilder.DoGroupEnd;
 begin
   if fOpenGroupStack.Count > 0 then
-     fCurGroup := fOpenGroupStack.Pop
-	else
+    fCurGroup := fOpenGroupStack.Pop
+  else
   begin
     if Assigned(fStructureRoot) then
       raise ERtfStructure.Create(sMultipleRootLevelGroups);

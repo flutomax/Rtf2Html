@@ -1,4 +1,4 @@
-unit uRtfHtmlObjects;
+﻿unit uRtfHtmlObjects;
 
 interface
 
@@ -19,7 +19,7 @@ const
   DefaultDocumentHeader = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
   DefaultDocumentCharacterSet = 'UTF-8';
   DefaultVisualHyperlinkPattern = '[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,''/\\\+&%\$#\=~])*';
-  DefaultHtmlFileExtension = '.html';
+DefaultHtmlFileExtension = '.html';
   DefaultFileNamePattern = '%d%s';
 
 type
@@ -157,9 +157,9 @@ begin
     Exit(False);
   Compare := TRtfHtmlStyle(Obj);
   Result := (fForegroundColor = Compare.fForegroundColor) and
-            (fBackgroundColor = Compare.fBackgroundColor) and
-            (fFontFamily = Compare.fFontFamily) and
-            (fFontSize = Compare.fFontSize);
+    (fBackgroundColor = Compare.fBackgroundColor) and
+    (fFontFamily = Compare.fFontFamily) and
+    (fFontSize = Compare.fFontSize);
 end;
 
 function TRtfHtmlStyle.GetHashCode: Integer;
@@ -371,10 +371,8 @@ begin
   sb := TStringList.Create;
   try
     for kind in Keys do
-    begin
       sb.Add(Format('%s=%s', [GetEnumName(TypeInfo(TRtfVisualSpecialCharKind),
         Ord(kind)), Items[kind]]));
-    end;
     Result := sb.DelimitedText;
   finally
     sb.Free;

@@ -1,4 +1,4 @@
-unit uRtfHash;
+﻿unit uRtfHash;
 
 interface
 
@@ -57,9 +57,7 @@ begin
   if enumerable = nil then
     raise EArgumentNilException.Create('enumerable cannot be nil');
   for item in enumerable do
-  begin
     hash := hash * 31 + IfThen(Assigned(item), item.GetHashCode);
-  end;
   Result := hash;
 end;
 

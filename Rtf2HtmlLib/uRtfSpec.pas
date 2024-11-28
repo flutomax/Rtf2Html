@@ -1,4 +1,4 @@
-unit uRtfSpec;
+﻿unit uRtfSpec;
 
 interface
 
@@ -109,99 +109,99 @@ const
   TagEnDash = 'endash';
 
   TagEmSpace = 'emspace';
-	TagEnSpace = 'enspace';
-	TagQmSpace = 'qmspace';
-	TagBulltet = 'bullet';
-	TagLeftSingleQuote = 'lquote';
-	TagRightSingleQuote = 'rquote';
-	TagLeftDoubleQuote = 'ldblquote';
-	TagRightDoubleQuote = 'rdblquote';
+  TagEnSpace = 'enspace';
+  TagQmSpace = 'qmspace';
+  TagBulltet = 'bullet';
+  TagLeftSingleQuote = 'lquote';
+  TagRightSingleQuote = 'rquote';
+  TagLeftDoubleQuote = 'ldblquote';
+  TagRightDoubleQuote = 'rdblquote';
 
-	// --- format ----
-	TagPlain = 'plain';
-	TagParagraphDefaults = 'pard';
-	TagSectionDefaults = 'sectd';
+  // --- format ----
+  TagPlain = 'plain';
+  TagParagraphDefaults = 'pard';
+  TagSectionDefaults = 'sectd';
 
-	TagBold = 'b';
-	TagItalic = 'i';
-	TagUnderLine = 'ul';
-	TagUnderLineNone = 'ulnone';
-	TagStrikeThrough = 'strike';
-	TagHidden = 'v';
-	TagAlignLeft = 'ql';
-	TagAlignCenter = 'qc';
-	TagAlignRight = 'qr';
-	TagAlignJustify = 'qj';
+  TagBold = 'b';
+  TagItalic = 'i';
+  TagUnderLine = 'ul';
+  TagUnderLineNone = 'ulnone';
+  TagStrikeThrough = 'strike';
+  TagHidden = 'v';
+  TagAlignLeft = 'ql';
+  TagAlignCenter = 'qc';
+  TagAlignRight = 'qr';
+  TagAlignJustify = 'qj';
 
-	TagStyleSheet = 'stylesheet';
+  TagStyleSheet = 'stylesheet';
 
-	// --- info ----
-	TagInfo = 'info';
-	TagInfoVersion = 'version';
-	TagInfoRevision = 'vern';
-	TagInfoNumberOfPages = 'nofpages';
-	TagInfoNumberOfWords = 'nofwords';
-	TagInfoNumberOfChars = 'nofchars';
-	TagInfoId = 'id';
-	TagInfoTitle = 'title';
-	TagInfoSubject = 'subject';
-	TagInfoAuthor = 'author';
-	TagInfoManager = 'manager';
-	TagInfoCompany = 'company';
-	TagInfoOperator = 'operator';
-	TagInfoCategory = 'category';
-	TagInfoKeywords = 'keywords';
-	TagInfoComment = 'comment';
-	TagInfoDocumentComment = 'doccomm';
-	TagInfoHyperLinkBase = 'hlinkbase';
-	TagInfoCreationTime = 'creatim';
-	TagInfoRevisionTime = 'revtim';
-	TagInfoPrintTime = 'printim';
-	TagInfoBackupTime = 'buptim';
-	TagInfoYear = 'yr';
-	TagInfoMonth = 'mo';
-	TagInfoDay = 'dy';
-	TagInfoHour = 'hr';
-	TagInfoMinute = 'min';
-	TagInfoSecond = 'sec';
-	TagInfoEditingTimeMinutes = 'edmins';
+  // --- info ----
+  TagInfo = 'info';
+  TagInfoVersion = 'version';
+  TagInfoRevision = 'vern';
+  TagInfoNumberOfPages = 'nofpages';
+  TagInfoNumberOfWords = 'nofwords';
+  TagInfoNumberOfChars = 'nofchars';
+  TagInfoId = 'id';
+  TagInfoTitle = 'title';
+  TagInfoSubject = 'subject';
+  TagInfoAuthor = 'author';
+  TagInfoManager = 'manager';
+  TagInfoCompany = 'company';
+  TagInfoOperator = 'operator';
+  TagInfoCategory = 'category';
+  TagInfoKeywords = 'keywords';
+  TagInfoComment = 'comment';
+  TagInfoDocumentComment = 'doccomm';
+  TagInfoHyperLinkBase = 'hlinkbase';
+  TagInfoCreationTime = 'creatim';
+  TagInfoRevisionTime = 'revtim';
+  TagInfoPrintTime = 'printim';
+  TagInfoBackupTime = 'buptim';
+  TagInfoYear = 'yr';
+  TagInfoMonth = 'mo';
+  TagInfoDay = 'dy';
+  TagInfoHour = 'hr';
+  TagInfoMinute = 'min';
+  TagInfoSecond = 'sec';
+  TagInfoEditingTimeMinutes = 'edmins';
 
-	// --- user properties ----
-	TagUserProperties = 'userprops';
-	TagUserPropertyType = 'proptype';
-	TagUserPropertyName = 'propname';
-	TagUserPropertyValue = 'staticval';
-	TagUserPropertyLink = 'linkval';
+  // --- user properties ----
+  TagUserProperties = 'userprops';
+  TagUserPropertyType = 'proptype';
+  TagUserPropertyName = 'propname';
+  TagUserPropertyValue = 'staticval';
+  TagUserPropertyLink = 'linkval';
 
-	// this table is from the RTF specification 1.9.1, page 40
-	PropertyTypeInteger = 3;
-	PropertyTypeRealNumber = 5;
-	PropertyTypeDate = 64;
-	PropertyTypeBoolean = 11;
-	PropertyTypeText = 30;
+  // this table is from the RTF specification 1.9.1, page 40
+  PropertyTypeInteger = 3;
+  PropertyTypeRealNumber = 5;
+  PropertyTypeDate = 64;
+  PropertyTypeBoolean = 11;
+  PropertyTypeText = 30;
 
-	// --- picture ----
-	TagPicture = 'pict';
-	TagPictureWrapper = 'shppict';
-	TagPictureWrapperAlternative = 'nonshppict';
-	TagPictureFormatEmf = 'emfblip';
-	TagPictureFormatPng = 'pngblip';
-	TagPictureFormatJpg = 'jpegblip';
-	TagPictureFormatPict = 'macpict';
-	TagPictureFormatOs2Metafile = 'pmmetafile';
-	TagPictureFormatWmf = 'wmetafile';
-	TagPictureFormatWinDib = 'dibitmap';
-	TagPictureFormatWinBmp = 'wbitmap';
-	TagPictureWidth = 'picw';
-	TagPictureHeight = 'pich';
-	TagPictureWidthGoal = 'picwgoal';
-	TagPictureHeightGoal = 'pichgoal';
-	TagPictureWidthScale = 'picscalex';
-	TagPictureHeightScale = 'picscaley';
+  // --- picture ----
+  TagPicture = 'pict';
+  TagPictureWrapper = 'shppict';
+  TagPictureWrapperAlternative = 'nonshppict';
+  TagPictureFormatEmf = 'emfblip';
+  TagPictureFormatPng = 'pngblip';
+  TagPictureFormatJpg = 'jpegblip';
+  TagPictureFormatPict = 'macpict';
+  TagPictureFormatOs2Metafile = 'pmmetafile';
+  TagPictureFormatWmf = 'wmetafile';
+  TagPictureFormatWinDib = 'dibitmap';
+  TagPictureFormatWinBmp = 'wbitmap';
+  TagPictureWidth = 'picw';
+  TagPictureHeight = 'pich';
+  TagPictureWidthGoal = 'picwgoal';
+  TagPictureHeightGoal = 'pichgoal';
+  TagPictureWidthScale = 'picscalex';
+  TagPictureHeightScale = 'picscaley';
 
-	// --- bullets/numbering ----
-	TagParagraphNumberText = 'pntext';
-	TagListNumberText = 'listtext';
+  // --- bullets/numbering ----
+  TagParagraphNumberText = 'pntext';
+  TagListNumberText = 'listtext';
 
   // --- tables ---
   TagTableRowDefaults = 'trowd';
@@ -259,7 +259,7 @@ const
   TagBorderWidth = 'brdrw';
 
 
-  function GetCodePage(charset: Integer): Integer;
+function GetCodePage(charset: Integer): Integer;
 
 implementation
 

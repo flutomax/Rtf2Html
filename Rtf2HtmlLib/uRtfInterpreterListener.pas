@@ -1,4 +1,4 @@
-unit uRtfInterpreterListener;
+﻿unit uRtfInterpreterListener;
 
 interface
 
@@ -120,7 +120,7 @@ procedure TRtfInterpreterListener.InsertImage(context: TRtfInterpreterContext;
 begin
   if Assigned(context) then
     DoInsertImage(context, format, width, height, desiredWidth, desiredHeight,
-    scaleWidthPercent, scaleHeightPercent, imageDataHex);
+      scaleWidthPercent, scaleHeightPercent, imageDataHex);
 end;
 
 procedure TRtfInterpreterListener.EndDocument(context: TRtfInterpreterContext);
@@ -231,9 +231,7 @@ begin
 
   case kind of
     rvtReset:
-    begin
       fPapInTbl := false;
-    end;
 
     rvtTrowd:
     begin
@@ -300,11 +298,9 @@ begin
     end;
 
     rvtCellBorderColor:
-    begin
       if InRange(value, 0, AContext.ColorTable.Count - 1) then
         fCurCellDef.BorderColor[fCurCellDef.ActiveBorder] :=
           AContext.ColorTable[value];
-    end;
 
     rvtCellBorderWidth:
       fCurCellDef.BorderWidth[fCurCellDef.ActiveBorder] := value;
@@ -315,10 +311,8 @@ begin
     rvtCellVerticalAlignBottom: fCurCellDef.VAlign := taBottom;
     rvtTableInTable: fPapInTbl := true;
     rvtTableCellBackgroundColor:
-    begin
       if InRange(value, 0, AContext.ColorTable.Count - 1) then
         fCurCellDef.BackgroundColor := AContext.ColorTable[value];
-    end;
     rvtTableNestingLevel: fTableNesting := true;
   end;
 end;
@@ -368,7 +362,7 @@ begin
     if fTableNesting then
       fCurCellObjList.Add(ch)
     else
-      fCurCell.AddVisualObject(ch)
+      fCurCell.AddVisualObject(ch);
   end
   else
     fVisualDocumentContent.Add(ch);
@@ -403,16 +397,16 @@ var
   Image: TRtfVisualImage;
 begin
   Image := TRtfVisualImage.Create(AFormat,
-      AContext.CurrentTextFormat.Alignment, AWidth, AHeight,
-      ADesiredWidth, ADesiredHeight, AScaleWidthPercent,
-      AScaleHeightPercent, AImageDataHex, AContext.Indent, fInTable);
+    AContext.CurrentTextFormat.Alignment, AWidth, AHeight,
+    ADesiredWidth, ADesiredHeight, AScaleWidthPercent,
+    AScaleHeightPercent, AImageDataHex, AContext.Indent, fInTable);
   FlushPendingText;
   if fInTable then
   begin
     if fTableNesting then
       fCurCellObjList.Add(Image)
     else
-      fCurCell.AddVisualObject(Image)
+      fCurCell.AddVisualObject(Image);
   end
   else
     AppendAlignedVisual(Image);
@@ -455,29 +449,25 @@ begin
     fTableNesting := false;
   end
   else
-  begin
     for AlignedVisual in fPendingParagraphContent do
-    begin
       case AlignedVisual.Kind of
         rvkImage:
-          begin
-            Image := TRtfVisualImage(AlignedVisual);
-            if Image.Alignment <> FinalParagraphAlignment then
-              Image.Alignment := FinalParagraphAlignment;
-          end;
+        begin
+          Image := TRtfVisualImage(AlignedVisual);
+          if Image.Alignment <> FinalParagraphAlignment then
+            Image.Alignment := FinalParagraphAlignment;
+        end;
         rvkText:
+        begin
+          Text := TRtfVisualText(AlignedVisual);
+          if Text.Format.Alignment <> FinalParagraphAlignment then
           begin
-            Text := TRtfVisualText(AlignedVisual);
-            if Text.Format.Alignment <> FinalParagraphAlignment then
-            begin
-              CorrectedFormat := Text.Format.DeriveWithAlignment(FinalParagraphAlignment);
-              CorrectedUniqueFormat := AContext.GetUniqueTextFormatInstance(CorrectedFormat);
-              Text.Format.Assign(CorrectedUniqueFormat);
-            end;
+            CorrectedFormat := Text.Format.DeriveWithAlignment(FinalParagraphAlignment);
+            CorrectedUniqueFormat := AContext.GetUniqueTextFormatInstance(CorrectedFormat);
+            Text.Format.Assign(CorrectedUniqueFormat);
           end;
+        end;
       end;
-    end;
-  end;
   fPendingParagraphContent.Clear;
 end;
 

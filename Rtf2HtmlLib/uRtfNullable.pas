@@ -36,7 +36,7 @@ uses
 function TNullable<T>.GetValue: T;
 begin
   if fHasValue then
-     Result := fValue
+    Result := fValue
   else
     raise ENullable.Create(sNoValueVar);
 end;

@@ -1,4 +1,4 @@
-unit uRtfGraphics;
+﻿unit uRtfGraphics;
 
 interface
 
@@ -39,7 +39,7 @@ type
     ScaleExtension: Single;
     constructor Create(AGraphics: TRtfGraphics);
     function GetImageFileName(Index: Integer;
-      ARtfVisualImageFormat: TRtfImageFormat): string;
+        ARtfVisualImageFormat: TRtfImageFormat): string;
   end;
 
   TRtfGraphicsConvertInfo = class
@@ -218,15 +218,11 @@ begin
   ImageBuffer := TextToBinary(AImageDataHex);
 
   if fSettings.ScaleImage then
-  begin
     ImageSize := TSize.Create(
       fSettings.Graphics.CalcImageWidth(AFormat, AWidth, ADesiredWidth, AScaleWidthPercent),
-      fSettings.Graphics.CalcImageHeight(AFormat, AHeight, ADesiredHeight, AScaleHeightPercent));
-  end
+      fSettings.Graphics.CalcImageHeight(AFormat, AHeight, ADesiredHeight, AScaleHeightPercent))
   else
-  begin
     ImageSize := TSize.Create(AWidth, AHeight);
-  end;
   SaveImage(ImageBuffer, AFormat, FileName, ImageSize);
   fConvertedImages.Add(TRtfGraphicsConvertInfo.Create(FileName, AFormat, ImageSize));
 end;
@@ -276,7 +272,7 @@ begin
     try
       Graphics := TGPGraphics.Create(Output);
       try
-         // set the composition mode to copy
+        // set the composition mode to copy
         Graphics.SetCompositingMode(CompositingModeSourceCopy);
         // set high quality rendering modes
         Graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
@@ -286,8 +282,8 @@ begin
           Graphics.Clear(ColorRefToARGB(ColorToRGB(fSettings.BackgroundColor.Value)));
         ScaleOffset := fSettings.ScaleOffset;
         ScaleExtension := fSettings.ScaleExtension;
-        Rect := MakeRect(ScaleOffset,	ScaleOffset, ASize.Width + ScaleExtension,
-		      ASize.Height + ScaleExtension);
+        Rect := MakeRect(ScaleOffset,  ScaleOffset, ASize.Width + ScaleExtension,
+          ASize.Height + ScaleExtension);
         // draw the input image on the output in modified size
         Graphics.DrawImage(Input, Rect);
       finally

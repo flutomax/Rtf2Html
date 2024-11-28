@@ -1,4 +1,4 @@
-unit uRtfHtmlWriter;
+﻿unit uRtfHtmlWriter;
 
 interface
 
@@ -22,7 +22,7 @@ type
     twtStrong, twtStyle, twtSub, twtSup, twtTable, twtTbody, twtTd, twtTextarea,
     twtTfoot, twtTh, twtThead, twtTitle, twtTr, twtTt, twtU, twtUl, twtVar,
     twtWbr, twtXml
-  );
+    );
 
   THtmlTextWriterAttribute = (
     twaAccesskey, twaAlign, twaAlt, twaBackground, twaBgcolor, twaBorder,
@@ -34,7 +34,7 @@ type
     twaWidth, twaWrap, twaAbbr, twaAutoComplete, twaAxis, twaContent, twaCoords,
     twaDesignerRegion, twaDir, twaHeaders, twaLongdesc, twaRel, twaScope,
     twaShape, twaUsemap, twaVCardName
-  );
+    );
 
   TTagType = (ttInline, ttNonClosing, ttOther);
 
@@ -64,7 +64,7 @@ type
     Encode: Boolean;
     IsUrl: Boolean;
     constructor Create(const aName, aValue: string;
-      aKey: THtmlTextWriterAttribute; aEncode, aIsUrl: Boolean);
+        aKey: THtmlTextWriterAttribute; aEncode, aIsUrl: Boolean);
   end;
 
   THTMLTextWriter = class(TObject)
@@ -208,157 +208,157 @@ begin
   fAttrKeyLookupTable := TDictionary<string, THtmlTextWriterAttribute>.Create;
 
   RegisterTag('',           twtUnknown,        ttOther);
-	RegisterTag('a',          twtA,              ttInline);
-	RegisterTag('acronym',    twtAcronym,        ttInline);
-	RegisterTag('address',    twtAddress,        ttOther);
-	RegisterTag('area',       twtArea,           ttNonClosing);
-	RegisterTag('b',          twtB,              ttInline);
-	RegisterTag('base',       twtBase,           ttNonClosing);
-	RegisterTag('basefont',   twtBasefont,       ttNonClosing);
-	RegisterTag('bdo',        twtBdo,            ttInline);
-	RegisterTag('bgsound',    twtBgsound,        ttNonClosing);
-	RegisterTag('big',        twtBig,            ttInline);
-	RegisterTag('blockquote', twtBlockquote,     ttOther);
-	RegisterTag('body',       twtBody,           ttOther);
-	RegisterTag('br',         twtBr,             ttOther);
-	RegisterTag('button',     twtButton,         ttInline);
-	RegisterTag('caption',    twtCaption,        ttOther);
-	RegisterTag('center',     twtCenter,         ttOther);
-	RegisterTag('cite',       twtCite,           ttInline);
-	RegisterTag('code',       twtCode,           ttInline);
-	RegisterTag('col',        twtCol,            ttNonClosing);
-	RegisterTag('colgroup',   twtColgroup,       ttOther);
-	RegisterTag('del',        twtDel,            ttInline);
-	RegisterTag('dd',         twtDd,             ttInline);
-	RegisterTag('dfn',        twtDfn,            ttInline);
-	RegisterTag('dir',        twtDir,            ttOther);
-	RegisterTag('div',        twtDiv,            ttOther);
-	RegisterTag('dl',         twtDl,             ttOther);
-	RegisterTag('dt',         twtDt,             ttInline);
-	RegisterTag('em',         twtEm,             ttInline);
-	RegisterTag('embed',      twtEmbed,          ttNonClosing);
-	RegisterTag('fieldset',   twtFieldset,       ttOther);
-	RegisterTag('font',       twtFont,           ttInline);
-	RegisterTag('form',       twtForm,           ttOther);
-	RegisterTag('frame',      twtFrame,          ttNonClosing);
-	RegisterTag('frameset',   twtFrameset,       ttOther);
-	RegisterTag('h1',         twtH1,             ttOther);
-	RegisterTag('h2',         twtH2,             ttOther);
-	RegisterTag('h3',         twtH3,             ttOther);
-	RegisterTag('h4',         twtH4,             ttOther);
-	RegisterTag('h5',         twtH5,             ttOther);
-	RegisterTag('h6',         twtH6,             ttOther);
-	RegisterTag('head',       twtHead,           ttOther);
-	RegisterTag('hr',         twtHr,             ttNonClosing);
-	RegisterTag('html',       twtHtml,           ttOther);
-	RegisterTag('i',          twtI,              ttInline);
-	RegisterTag('iframe',     twtIframe,         ttOther);
-	RegisterTag('img',        twtImg,            ttNonClosing);
-	RegisterTag('input',      twtInput,          ttNonClosing);
-	RegisterTag('ins',        twtIns,            ttInline);
-	RegisterTag('isindex',    twtIsindex,        ttNonClosing);
-	RegisterTag('kbd',        twtKbd,            ttInline);
-	RegisterTag('label',      twtLabel,          ttInline);
-	RegisterTag('legend',     twtLegend,         ttOther);
-	RegisterTag('li',         twtLi,             ttInline);
-	RegisterTag('link',       twtLink,           ttNonClosing);
-	RegisterTag('map',        twtMap,            ttOther);
-	RegisterTag('marquee',    twtMarquee,        ttOther);
-	RegisterTag('menu',       twtMenu,           ttOther);
-	RegisterTag('meta',       twtMeta,           ttNonClosing);
-	RegisterTag('nobr',       twtNobr,           ttInline);
-	RegisterTag('noframes',   twtNoframes,       ttOther);
-	RegisterTag('noscript',   twtNoscript,       ttOther);
-	RegisterTag('object',     twtObject,         ttOther);
-	RegisterTag('ol',         twtOl,             ttOther);
-	RegisterTag('option',     twtOption,         ttOther);
-	RegisterTag('p',          twtP,              ttInline);
-	RegisterTag('param',      twtParam,          ttOther);
-	RegisterTag('pre',        twtPre,            ttOther);
-	RegisterTag('ruby',       twtRuby,           ttOther);
-	RegisterTag('rt',         twtRt,             ttOther);
-	RegisterTag('q',          twtQ,              ttInline);
-	RegisterTag('s',          twtS,              ttInline);
-	RegisterTag('samp',       twtSamp,           ttInline);
-	RegisterTag('script',     twtScript,         ttOther);
-	RegisterTag('select',     twtSelect,         ttOther);
-	RegisterTag('small',      twtSmall,          ttOther);
-	RegisterTag('span',       twtSpan,           ttInline);
-	RegisterTag('strike',     twtStrike,         ttInline);
-	RegisterTag('strong',     twtStrong,         ttInline);
-	RegisterTag('style',      twtStyle,          ttOther);
-	RegisterTag('sub',        twtSub,            ttInline);
-	RegisterTag('sup',        twtSup,            ttInline);
-	RegisterTag('table',      twtTable,          ttOther);
-	RegisterTag('tbody',      twtTbody,          ttOther);
-	RegisterTag('td',         twtTd,             ttInline);
-	RegisterTag('textarea',   twtTextarea,       ttInline);
-	RegisterTag('tfoot',      twtTfoot,          ttOther);
-	RegisterTag('th',         twtTh,             ttInline);
-	RegisterTag('thead',      twtThead,          ttOther);
-	RegisterTag('title',      twtTitle,          ttOther);
-	RegisterTag('tr',         twtTr,             ttOther);
-	RegisterTag('tt',         twtTt,             ttInline);
-	RegisterTag('u',          twtU,              ttInline);
-	RegisterTag('ul',         twtUl,             ttOther);
-	RegisterTag('var',        twtVar,            ttInline);
-	RegisterTag('wbr',        twtWbr,            ttNonClosing);
-	RegisterTag('xml',        twtXml,            ttOther);
+  RegisterTag('a',          twtA,              ttInline);
+  RegisterTag('acronym',    twtAcronym,        ttInline);
+  RegisterTag('address',    twtAddress,        ttOther);
+  RegisterTag('area',       twtArea,           ttNonClosing);
+  RegisterTag('b',          twtB,              ttInline);
+  RegisterTag('base',       twtBase,           ttNonClosing);
+  RegisterTag('basefont',   twtBasefont,       ttNonClosing);
+  RegisterTag('bdo',        twtBdo,            ttInline);
+  RegisterTag('bgsound',    twtBgsound,        ttNonClosing);
+  RegisterTag('big',        twtBig,            ttInline);
+  RegisterTag('blockquote', twtBlockquote,     ttOther);
+  RegisterTag('body',       twtBody,           ttOther);
+  RegisterTag('br',         twtBr,             ttOther);
+  RegisterTag('button',     twtButton,         ttInline);
+  RegisterTag('caption',    twtCaption,        ttOther);
+  RegisterTag('center',     twtCenter,         ttOther);
+  RegisterTag('cite',       twtCite,           ttInline);
+  RegisterTag('code',       twtCode,           ttInline);
+  RegisterTag('col',        twtCol,            ttNonClosing);
+  RegisterTag('colgroup',   twtColgroup,       ttOther);
+  RegisterTag('del',        twtDel,            ttInline);
+  RegisterTag('dd',         twtDd,             ttInline);
+  RegisterTag('dfn',        twtDfn,            ttInline);
+  RegisterTag('dir',        twtDir,            ttOther);
+  RegisterTag('div',        twtDiv,            ttOther);
+  RegisterTag('dl',         twtDl,             ttOther);
+  RegisterTag('dt',         twtDt,             ttInline);
+  RegisterTag('em',         twtEm,             ttInline);
+  RegisterTag('embed',      twtEmbed,          ttNonClosing);
+  RegisterTag('fieldset',   twtFieldset,       ttOther);
+  RegisterTag('font',       twtFont,           ttInline);
+  RegisterTag('form',       twtForm,           ttOther);
+  RegisterTag('frame',      twtFrame,          ttNonClosing);
+  RegisterTag('frameset',   twtFrameset,       ttOther);
+  RegisterTag('h1',         twtH1,             ttOther);
+  RegisterTag('h2',         twtH2,             ttOther);
+  RegisterTag('h3',         twtH3,             ttOther);
+  RegisterTag('h4',         twtH4,             ttOther);
+  RegisterTag('h5',         twtH5,             ttOther);
+  RegisterTag('h6',         twtH6,             ttOther);
+  RegisterTag('head',       twtHead,           ttOther);
+  RegisterTag('hr',         twtHr,             ttNonClosing);
+  RegisterTag('html',       twtHtml,           ttOther);
+  RegisterTag('i',          twtI,              ttInline);
+  RegisterTag('iframe',     twtIframe,         ttOther);
+  RegisterTag('img',        twtImg,            ttNonClosing);
+  RegisterTag('input',      twtInput,          ttNonClosing);
+  RegisterTag('ins',        twtIns,            ttInline);
+  RegisterTag('isindex',    twtIsindex,        ttNonClosing);
+  RegisterTag('kbd',        twtKbd,            ttInline);
+  RegisterTag('label',      twtLabel,          ttInline);
+  RegisterTag('legend',     twtLegend,         ttOther);
+  RegisterTag('li',         twtLi,             ttInline);
+  RegisterTag('link',       twtLink,           ttNonClosing);
+  RegisterTag('map',        twtMap,            ttOther);
+  RegisterTag('marquee',    twtMarquee,        ttOther);
+  RegisterTag('menu',       twtMenu,           ttOther);
+  RegisterTag('meta',       twtMeta,           ttNonClosing);
+  RegisterTag('nobr',       twtNobr,           ttInline);
+  RegisterTag('noframes',   twtNoframes,       ttOther);
+  RegisterTag('noscript',   twtNoscript,       ttOther);
+  RegisterTag('object',     twtObject,         ttOther);
+  RegisterTag('ol',         twtOl,             ttOther);
+  RegisterTag('option',     twtOption,         ttOther);
+  RegisterTag('p',          twtP,              ttInline);
+  RegisterTag('param',      twtParam,          ttOther);
+  RegisterTag('pre',        twtPre,            ttOther);
+  RegisterTag('ruby',       twtRuby,           ttOther);
+  RegisterTag('rt',         twtRt,             ttOther);
+  RegisterTag('q',          twtQ,              ttInline);
+  RegisterTag('s',          twtS,              ttInline);
+  RegisterTag('samp',       twtSamp,           ttInline);
+  RegisterTag('script',     twtScript,         ttOther);
+  RegisterTag('select',     twtSelect,         ttOther);
+  RegisterTag('small',      twtSmall,          ttOther);
+  RegisterTag('span',       twtSpan,           ttInline);
+  RegisterTag('strike',     twtStrike,         ttInline);
+  RegisterTag('strong',     twtStrong,         ttInline);
+  RegisterTag('style',      twtStyle,          ttOther);
+  RegisterTag('sub',        twtSub,            ttInline);
+  RegisterTag('sup',        twtSup,            ttInline);
+  RegisterTag('table',      twtTable,          ttOther);
+  RegisterTag('tbody',      twtTbody,          ttOther);
+  RegisterTag('td',         twtTd,             ttInline);
+  RegisterTag('textarea',   twtTextarea,       ttInline);
+  RegisterTag('tfoot',      twtTfoot,          ttOther);
+  RegisterTag('th',         twtTh,             ttInline);
+  RegisterTag('thead',      twtThead,          ttOther);
+  RegisterTag('title',      twtTitle,          ttOther);
+  RegisterTag('tr',         twtTr,             ttOther);
+  RegisterTag('tt',         twtTt,             ttInline);
+  RegisterTag('u',          twtU,              ttInline);
+  RegisterTag('ul',         twtUl,             ttOther);
+  RegisterTag('var',        twtVar,            ttInline);
+  RegisterTag('wbr',        twtWbr,            ttNonClosing);
+  RegisterTag('xml',        twtXml,            ttOther);
 
-	RegisterAttribute('abbr',            twaAbbr,           true);
-	RegisterAttribute('accesskey',       twaAccesskey,      true);
-	RegisterAttribute('align',           twaAlign,          false);
-	RegisterAttribute('alt',             twaAlt,            true);
-	RegisterAttribute('autocomplete',    twaAutoComplete,   false);
-	RegisterAttribute('axis',            twaAxis,           true);
-	RegisterAttribute('background',      twaBackground,     true,     true);
-	RegisterAttribute('bgcolor',         twaBgcolor,        false);
-	RegisterAttribute('border',          twaBorder,         false);
-	RegisterAttribute('bordercolor',     twaBordercolor,    false);
-	RegisterAttribute('cellpadding',     twaCellpadding,    false);
-	RegisterAttribute('cellspacing',     twaCellspacing,    false);
-	RegisterAttribute('checked',         twaChecked,        false);
-	RegisterAttribute('class',           twaClass,          true);
-	RegisterAttribute('cols',            twaCols,           false);
-	RegisterAttribute('colspan',         twaColspan,        false);
-	RegisterAttribute('content',         twaContent,        true);
-	RegisterAttribute('coords',          twaCoords,         false);
-	RegisterAttribute('dir',             twaDir,            false);
-	RegisterAttribute('disabled',        twaDisabled,       false);
-	RegisterAttribute('for',             twaFor,            false);
-	RegisterAttribute('headers',         twaHeaders,        true);
-	RegisterAttribute('height',          twaHeight,         false);
-	RegisterAttribute('href',            twaHref,           true,      true);
-	RegisterAttribute('id',              twaId,             false);
-	RegisterAttribute('longdesc',        twaLongdesc,       true,      true);
-	RegisterAttribute('maxlength',       twaMaxlength,      false);
-	RegisterAttribute('multiple',        twaMultiple,       false);
-	RegisterAttribute('name',            twaName,           false);
-	RegisterAttribute('nowrap',          twaNowrap,         false);
-	RegisterAttribute('onclick',         twaOnclick,        true);
-	RegisterAttribute('onchange',        twaOnchange,       true);
-	RegisterAttribute('readonly',        twaReadOnly,       false);
-	RegisterAttribute('rel',             twaRel,            false);
-	RegisterAttribute('rows',            twaRows,           false);
-	RegisterAttribute('rowspan',         twaRowspan,        false);
-	RegisterAttribute('rules',           twaRules,          false);
-	RegisterAttribute('scope',           twaScope,          false);
-	RegisterAttribute('selected',        twaSelected,       false);
-	RegisterAttribute('shape',           twaShape,          false);
-	RegisterAttribute('size',            twaSize,           false);
-	RegisterAttribute('src',             twaSrc,            true,      true);
-	RegisterAttribute('style',           twaStyle,          false);
-	RegisterAttribute('tabindex',        twaTabindex,       false);
-	RegisterAttribute('target',          twaTarget,         false);
-	RegisterAttribute('title',           twaTitle,          true);
-	RegisterAttribute('type',            twaType,           false);
-	RegisterAttribute('usemap',          twaUsemap,         false);
-	RegisterAttribute('valign',          twaValign,         false);
-	RegisterAttribute('value',           twaValue,          true);
-	RegisterAttribute('vcard_name',      twaVCardName,      false);
-	RegisterAttribute('width',           twaWidth,          false);
-	RegisterAttribute('wrap',            twaWrap,           false);
-	RegisterAttribute(DesignerRegionAttributeName, twaDesignerRegion, false);
+  RegisterAttribute('abbr',            twaAbbr,           true);
+  RegisterAttribute('accesskey',       twaAccesskey,      true);
+  RegisterAttribute('align',           twaAlign,          false);
+  RegisterAttribute('alt',             twaAlt,            true);
+  RegisterAttribute('autocomplete',    twaAutoComplete,   false);
+  RegisterAttribute('axis',            twaAxis,           true);
+  RegisterAttribute('background',      twaBackground,     true,     true);
+  RegisterAttribute('bgcolor',         twaBgcolor,        false);
+  RegisterAttribute('border',          twaBorder,         false);
+  RegisterAttribute('bordercolor',     twaBordercolor,    false);
+  RegisterAttribute('cellpadding',     twaCellpadding,    false);
+  RegisterAttribute('cellspacing',     twaCellspacing,    false);
+  RegisterAttribute('checked',         twaChecked,        false);
+  RegisterAttribute('class',           twaClass,          true);
+  RegisterAttribute('cols',            twaCols,           false);
+  RegisterAttribute('colspan',         twaColspan,        false);
+  RegisterAttribute('content',         twaContent,        true);
+  RegisterAttribute('coords',          twaCoords,         false);
+  RegisterAttribute('dir',             twaDir,            false);
+  RegisterAttribute('disabled',        twaDisabled,       false);
+  RegisterAttribute('for',             twaFor,            false);
+  RegisterAttribute('headers',         twaHeaders,        true);
+  RegisterAttribute('height',          twaHeight,         false);
+  RegisterAttribute('href',            twaHref,           true,      true);
+  RegisterAttribute('id',              twaId,             false);
+  RegisterAttribute('longdesc',        twaLongdesc,       true,      true);
+  RegisterAttribute('maxlength',       twaMaxlength,      false);
+  RegisterAttribute('multiple',        twaMultiple,       false);
+  RegisterAttribute('name',            twaName,           false);
+  RegisterAttribute('nowrap',          twaNowrap,         false);
+  RegisterAttribute('onclick',         twaOnclick,        true);
+  RegisterAttribute('onchange',        twaOnchange,       true);
+  RegisterAttribute('readonly',        twaReadOnly,       false);
+  RegisterAttribute('rel',             twaRel,            false);
+  RegisterAttribute('rows',            twaRows,           false);
+  RegisterAttribute('rowspan',         twaRowspan,        false);
+  RegisterAttribute('rules',           twaRules,          false);
+  RegisterAttribute('scope',           twaScope,          false);
+  RegisterAttribute('selected',        twaSelected,       false);
+  RegisterAttribute('shape',           twaShape,          false);
+  RegisterAttribute('size',            twaSize,           false);
+  RegisterAttribute('src',             twaSrc,            true,      true);
+  RegisterAttribute('style',           twaStyle,          false);
+  RegisterAttribute('tabindex',        twaTabindex,       false);
+  RegisterAttribute('target',          twaTarget,         false);
+  RegisterAttribute('title',           twaTitle,          true);
+  RegisterAttribute('type',            twaType,           false);
+  RegisterAttribute('usemap',          twaUsemap,         false);
+  RegisterAttribute('valign',          twaValign,         false);
+  RegisterAttribute('value',           twaValue,          true);
+  RegisterAttribute('vcard_name',      twaVCardName,      false);
+  RegisterAttribute('width',           twaWidth,          false);
+  RegisterAttribute('wrap',            twaWrap,           false);
+  RegisterAttribute(DesignerRegionAttributeName, twaDesignerRegion, false);
 end;
 
 destructor THTMLTextWriter.Destroy;
@@ -420,20 +420,16 @@ function THTMLTextWriter.GetAttributeKey(
   const aName: string): THtmlTextWriterAttribute;
 begin
   if not aName.IsEmpty then
-  begin
     if fAttrKeyLookupTable.TryGetValue(aName.ToLower, result) then
       exit;
-  end;
   result := THtmlTextWriterAttribute(-1);
 end;
 
 function THTMLTextWriter.GetTagKey(const aTagName: string): THtmlTextWriterTag;
 begin
   if not aTagName.IsEmpty then
-  begin
     if fTagKeyLookupTable.TryGetValue(aTagName.ToLower, result) then
       exit;
-  end;
   result := twtUnknown;
 end;
 
@@ -667,10 +663,8 @@ begin
           fWriter.Write(EqualsDoubleQuoteString);
           AttrValue := attr.Value;
           if attr.IsUrl then
-          begin
             if (attr.Key <> twaHref) or (not AttrValue.StartsWith('javascript:', true)) then
               AttrValue := EncodeUrl(attrValue);
-          end;
           if attr.Encode then
             WriteHtmlAttributeEncode(AttrValue)
           else
@@ -710,17 +704,17 @@ begin
   // write text before the content
   if RenderEndTag then
   begin
-      if TagType = ttInline then
-        inc(fInlineCount)
-      else
-      begin
-        // writeline and indent before rendering content
-        WriteLine;
-        Inc(fIndentLevel);
-      end;
-      // Manually build end tags for unknown tag types.
-      if EndTag.IsEmpty then
-        EndTag := EndTagLeftChars + fTagName + TagRightChar;
+    if TagType = ttInline then
+      inc(fInlineCount)
+    else
+    begin
+      // writeline and indent before rendering content
+      WriteLine;
+      Inc(fIndentLevel);
+    end;
+    // Manually build end tags for unknown tag types.
+    if EndTag.IsEmpty then
+      EndTag := EndTagLeftChars + fTagName + TagRightChar;
   end;
 
   if fIsDescendant then
@@ -752,11 +746,10 @@ begin
   EndTag := PopEndTag;
 
   if not EndTag.IsEmpty then
-  begin
     if fTagNameLookupArray[fTagKey].tagType = ttInline then
     begin
       dec(fInlineCount);
-        // Never inject crlfs at end of inline tags.
+      // Never inject crlfs at end of inline tags.
       Write(endTag);
     end
     else
@@ -770,7 +763,6 @@ begin
       fIndentLevel := Max(fIndentLevel, 0);
       Write(EndTag);
     end;
-  end;
 end;
 
 end.

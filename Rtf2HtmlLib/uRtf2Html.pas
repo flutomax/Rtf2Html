@@ -1,4 +1,4 @@
-unit uRtf2Html;
+﻿unit uRtf2Html;
 
 interface
 
@@ -63,7 +63,6 @@ type
       write fVisualHyperlinkPattern;
     property OnLogMessage: TLogEvent read fOnLogMessage write fOnLogMessage;
   end;
-
 
 
 implementation
@@ -259,7 +258,7 @@ begin
     if not ConvertHmtl(RtfDocument, Graphics, html) then
       exit;
 {$IFDEF DUMP_DOCUMENT}
-   DumpDocument(RtfDocument);
+    DumpDocument(RtfDocument);
 {$ENDIF}
   finally
     RtfGroup.Free;

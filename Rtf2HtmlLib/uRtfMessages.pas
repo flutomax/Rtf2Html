@@ -1,4 +1,4 @@
-unit uRtfMessages;
+﻿unit uRtfMessages;
 
 interface
 
@@ -108,8 +108,8 @@ resourcestring
   sUnequalCells = 'number of cells and number of defined cell are unequal';
 
 
-  function InvalidMultiByteEncoding(const buffer: TBytes; index: integer;
-    encoding: TEncoding): string;
+function InvalidMultiByteEncoding(const buffer: TBytes; index: integer;
+  encoding: TEncoding): string;
 
 implementation
 

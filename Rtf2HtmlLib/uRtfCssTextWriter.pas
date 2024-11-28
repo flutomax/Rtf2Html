@@ -1,4 +1,4 @@
-unit uRtfCssTextWriter;
+﻿unit uRtfCssTextWriter;
 
 interface
 
@@ -17,7 +17,7 @@ type
     twsOverflowY, twsPadding, twsPaddingBottom, twsPaddingLeft, twsPaddingRight,
     twsPaddingTop, twsPosition, twsTextAlign, twsVerticalAlign, twsTextOverflow,
     twsTextIndent, twsTop, twsVisibility, twsWhiteSpace, twsZIndex
-  );
+    );
 
   TAttributeInformation = record
     Name: string;
@@ -152,10 +152,8 @@ var
   key: THtmlTextWriterStyle;
 begin
   if not StyleName.IsEmpty then
-  begin
     if fAttrKeyLookupTable.TryGetValue(LowerCase(StyleName), key) then
       Exit(key);
-  end;
   Result := THtmlTextWriterStyle(-1);
 end;
 
@@ -248,14 +246,12 @@ begin
   end;
 
   for Quote in Quotes do
-  begin
     if (StartsStr(Quote, UrlValue)) and (EndsStr(Quote, UrlValue)) then
     begin
       UrlValue := UrlValue.Trim([Quote]);
       SurroundingQuote := Quote;
       break;
     end;
-  end;
 
   fWriter.Write('url(');
   if SurroundingQuote <> #0 then

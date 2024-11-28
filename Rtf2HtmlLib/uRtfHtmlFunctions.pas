@@ -1,4 +1,4 @@
-unit uRtfHtmlFunctions;
+﻿unit uRtfHtmlFunctions;
 
 interface
 
@@ -6,13 +6,13 @@ uses
   Winapi.Windows, System.SysUtils, Vcl.Graphics, uRtfObjects, uRtfVisual,
   uRtfHtmlObjects;
 
-  function EncodeUrl(const url: string): string;
-  function HtmlEncodeString(const s: string): string;
-  function HtmlEncodeAttr(const s: string; NonBreakingSpaces: boolean = false): string;
-  function ColorToHtml(Color: TColor): string;
-  function TextToHtml(VisualText: TRtfVisualText): TRtfHtmlStyle;
-  function TextToBinary(HexStr: string): TBytes;
-  function TwipToPixel(const x: integer): integer;
+function EncodeUrl(const url: string): string;
+function HtmlEncodeString(const s: string): string;
+function HtmlEncodeAttr(const s: string; NonBreakingSpaces: boolean = false): string;
+function ColorToHtml(Color: TColor): string;
+function TextToHtml(VisualText: TRtfVisualText): TRtfHtmlStyle;
+function TextToBinary(HexStr: string): TBytes;
+function TwipToPixel(const x: integer): integer;
 
 implementation
 
@@ -170,7 +170,7 @@ const
     (Name: 'whitesmoke'; Value: $F5F5F5),
     (Name: 'yellow'; Value: $FFFF00),
     (Name: 'yellowgreen'; Value: $9ACD32)
-  );
+    );
 
 function HtmlEncodeString(const s: string): string;
 begin
