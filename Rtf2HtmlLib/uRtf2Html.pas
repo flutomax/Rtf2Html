@@ -17,7 +17,6 @@ type
     fImagesPath: string;
     fStyleSheets: string;
     fStringStream: TStringStream;
-    fOnLogMessage: TLogEvent;
     fShowHiddenText: boolean;
     fUseNonBreakingSpaces: boolean;
     fConvertScope: integer;
@@ -26,6 +25,8 @@ type
     fSpecialCharsRepresentation: string;
     fOutputFileName: string;
     fGenerator: string;
+    fErrorsList: TStrings;
+    fOnLogMessage: TLogEvent;
     procedure Add2Log(const Text: string);
     procedure StructureBuilderParseBegin(Sender: TObject);
     procedure StructureBuilderParseEnd(Sender: TObject);
@@ -44,6 +45,7 @@ type
     procedure LoadFromStream(Stream: TStream);
     procedure LoadFromString(const data: string);
     procedure Convert;
+    property ErrorsList: TStrings read fErrorsList;
   published
     property ConvertScope: integer read fConvertScope write fConvertScope;
     property ConvertVisualHyperlinks: boolean read fConvertVisualHyperlinks
@@ -94,6 +96,7 @@ constructor TRtf2Html.Create(AOwner: TComponent);
 begin
   inherited;
   fStringStream := TStringStream.Create;
+  fErrorsList := TStringList.Create;
   fConvertVisualHyperlinks := true;
   fUseNonBreakingSpaces := false;
   fShowHiddenText := false;
@@ -105,7 +108,8 @@ end;
 
 destructor TRtf2Html.Destroy;
 begin
-  fStringStream.Free;
+  FreeAndNil(fStringStream);
+  FreeAndNil(fErrorsList);
   inherited;
 end;
 
@@ -135,6 +139,7 @@ end;
 procedure TRtf2Html.StructureBuilderParseFail(const s: string);
 begin
   Add2Log(sInfParseFail + s);
+  fErrorsList.Add(sInfParseFail + s);
 end;
 
 procedure TRtf2Html.StructureBuilderParseSuccess(Sender: TObject);
@@ -146,11 +151,15 @@ procedure TRtf2Html.LoadFromFile(const FileName: string);
 var
   fs: TFileStream;
 begin
-  fs := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
   try
-    LoadFromStream(fs);
-  finally
-    fs.Free;
+    fs := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
+    try
+      LoadFromStream(fs);
+    finally
+      fs.Free;
+    end;
+  except
+    fErrorsList.Add(Format(sErrOpenFile, [FileName]));
   end;
 end;
 
@@ -192,6 +201,7 @@ begin
       on E: Exception do
       begin
         Add2Log(sErrInterpreting + E.Message);
+        fErrorsList.Add(sErrInterpreting + E.Message);
         exit;
       end;
     end;
@@ -224,6 +234,7 @@ begin
       on E: Exception do
       begin
         Add2Log(sErrInterpreting + E.Message);
+        fErrorsList.Add(sErrInterpreting + E.Message);
         exit;
       end;
     end;
@@ -246,6 +257,7 @@ begin
     raise EArgumentException.Create(sEmptyFileName);
   if not DirectoryExists(fOutputFolder) then
     raise EDirectoryNotFoundException.CreateFmt(sDirectoryNotFound, [fOutputFolder]);
+  fErrorsList.Clear;
   RtfGroup := nil;
   RtfDocument := nil;
   if not ParseRtf(RtfGroup) then
@@ -307,6 +319,7 @@ begin
         on E: Exception do
         begin
           Add2Log(sErrConverting + E.Message);
+          fErrorsList.Add(sErrConverting + E.Message);
           exit;
         end;
       end;

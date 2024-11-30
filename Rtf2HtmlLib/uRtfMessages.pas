@@ -7,6 +7,7 @@ uses
 
 resourcestring
 
+  sErrOpenFile = 'can''t open file "%s"';
   sNoRtfContent = 'no rtf content';
   sTextOnRootLevel = 'a text cannot appear on root level, must be child of a group: "%s"';
   sMultipleRootLevelGroups = 'invalid state: multiple root level groups';
