@@ -18,15 +18,15 @@ type
   private
     fOrder: TRtfVisitorOrder;
   protected
-    procedure DoVisitTag(tag: TRtfTag); virtual;
-    procedure DoVisitGroup(group: TRtfGroup); virtual;
-    procedure DoVisitText(text: TRtfText); virtual;
-    procedure VisitGroupChildren(group: TRtfGroup); virtual;
+    procedure DoVisitTag(ATag: TRtfTag); virtual;
+    procedure DoVisitGroup(AGroup: TRtfGroup); virtual;
+    procedure DoVisitText(AText: TRtfText); virtual;
+    procedure VisitGroupChildren(AGroup: TRtfGroup); virtual;
   public
     constructor Create(aOrder: TRtfVisitorOrder); virtual;
-    procedure VisitTag(tag: TRtfTag); virtual;
-    procedure VisitGroup(group: TRtfGroup); virtual;
-    procedure VisitText(text: TRtfText); virtual;
+    procedure VisitTag(ATag: TRtfTag); virtual;
+    procedure VisitGroup(AGroup: TRtfGroup); virtual;
+    procedure VisitText(AText: TRtfText); virtual;
   end;
 
   TRtfElement = class(TObject)
@@ -117,53 +117,53 @@ begin
   fOrder := aOrder;
 end;
 
-procedure TRtfElementVisitor.VisitTag(tag: TRtfTag);
+procedure TRtfElementVisitor.VisitTag(ATag: TRtfTag);
 begin
-  if Assigned(tag) then
-    DoVisitTag(tag);
+  if Assigned(ATag) then
+    DoVisitTag(ATag);
 end;
 
-procedure TRtfElementVisitor.DoVisitGroup(group: TRtfGroup);
-begin
-
-end;
-
-procedure TRtfElementVisitor.DoVisitTag(tag: TRtfTag);
+procedure TRtfElementVisitor.DoVisitGroup(AGroup: TRtfGroup);
 begin
 
 end;
 
-procedure TRtfElementVisitor.DoVisitText(text: TRtfText);
+procedure TRtfElementVisitor.DoVisitTag(ATag: TRtfTag);
 begin
 
 end;
 
-procedure TRtfElementVisitor.VisitGroup(group: TRtfGroup);
+procedure TRtfElementVisitor.DoVisitText(AText: TRtfText);
 begin
-  if Assigned(group) then
+
+end;
+
+procedure TRtfElementVisitor.VisitGroup(AGroup: TRtfGroup);
+begin
+  if Assigned(AGroup) then
   begin
     if fOrder = rvDepthFirst then
-      VisitGroupChildren(group);
-    DoVisitGroup(group);
+      VisitGroupChildren(AGroup);
+    DoVisitGroup(AGroup);
     if fOrder = rvBreadthFirst then
-      VisitGroupChildren(group);
+      VisitGroupChildren(AGroup);
   end;
 end;
 
-procedure TRtfElementVisitor.VisitText(text: TRtfText);
+procedure TRtfElementVisitor.VisitText(AText: TRtfText);
 begin
-  if Assigned(text) then
-    DoVisitText(text);
+  if Assigned(AText) then
+    DoVisitText(AText);
 end;
 
-procedure TRtfElementVisitor.VisitGroupChildren(group: TRtfGroup);
+procedure TRtfElementVisitor.VisitGroupChildren(AGroup: TRtfGroup);
 var
   child: TRtfElement;
   i: Integer;
 begin
-  for i := 0 to group.Contents.Count - 1 do
+  for i := 0 to AGroup.Contents.Count - 1 do
   begin
-    child := group.Contents[i];
+    child := AGroup.Contents[i];
     child.Visit(Self);
   end;
 end;

@@ -111,7 +111,7 @@ uses
 const
   GeneratorName = 'Rtf2Html';
   NonBreakingSpace = '&nbsp;';
-  UnsortedListValue = '·';
+  UnsortedListValue = 'Â·';
 
 
 { TRtfHtmlConverter }
@@ -622,6 +622,26 @@ begin
 
   if (not IsInListItem) and (not aVisualText.IsInTable) then
     BeginParagraph(aVisualText.Indent);
+  // visual hyperlink
+  IsHyperlink := false;
+  if fSettings.ConvertVisualHyperlinks then
+  begin
+    href := ConvertVisualHyperlink(aVisualText.Text);
+    if not href.IsEmpty then
+    begin
+      IsHyperlink := true;
+      fWriter.AddAttribute(twaHref, href);
+      RenderATag;
+    end;
+  end
+  else
+  // make hyperlink
+  if not aVisualText.URL.IsEmpty then
+  begin
+    IsHyperlink := true;
+    fWriter.AddAttribute(twaHref, aVisualText.URL, false);
+    RenderATag;
+  end;
 
   // format tags
   if TextFormat.IsBold then
@@ -654,18 +674,6 @@ begin
         fWriter.AddStyleAttribute(twsFontSize, HtmlStyle.FontSize);
       RenderSpanTag;
     end;
-    // visual hyperlink
-    IsHyperlink := false;
-    if fSettings.ConvertVisualHyperlinks then
-    begin
-      href := ConvertVisualHyperlink(aVisualText.Text);
-      if not href.IsEmpty then
-      begin
-        IsHyperlink := true;
-        fWriter.AddAttribute(twaHref, href);
-        RenderATag;
-      end;
-    end;
     // subscript and superscript
     if TextFormat.SuperScript < 0 then
       RenderSubTag
@@ -678,9 +686,6 @@ begin
       RenderEndTag // sub
     else if TextFormat.SuperScript > 0 then
       RenderEndTag; // sup
-    // visual hyperlink
-    if IsHyperlink then
-      RenderEndTag; // a
     // span with style
     if not HtmlStyle.IsEmpty then
       RenderEndTag;
@@ -693,7 +698,9 @@ begin
       RenderEndTag; // i
     if TextFormat.IsBold then
       RenderEndTag; // b
-
+    // visual hyperlink
+    if IsHyperlink then
+      RenderEndTag; // a
   finally
     if not HtmlStyle.Default then
       FreeAndNil(HtmlStyle);
@@ -772,7 +779,6 @@ begin
       end
       else
       begin
-        fWriter.AddStyleAttribute(twsMargin, '0');
         BeginParagraph(aVisualBreak.Indent);
         // Uncomment if the height is not enough
         //fWriter.Write(NonBreakingSpace);

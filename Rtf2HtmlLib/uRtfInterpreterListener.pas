@@ -12,6 +12,7 @@ type
   protected
     procedure DoBeginDocument(context: TRtfInterpreterContext); virtual;
     procedure DoInsertText(context: TRtfInterpreterContext; const text: string); virtual;
+    procedure DoInsertHyperlink(context: TRtfInterpreterContext; const URL: string); virtual;
     procedure DoInsertSpecialChar(context: TRtfInterpreterContext; kind: TRtfVisualSpecialCharKind); virtual;
     procedure DoInsertBreak(context: TRtfInterpreterContext; kind: TRtfVisualBreakKind); virtual;
     procedure DoInsertImage(AContext: TRtfInterpreterContext; AFormat: TRtfImageFormat;
@@ -23,6 +24,7 @@ type
   public
     procedure BeginDocument(context: TRtfInterpreterContext);
     procedure InsertText(context: TRtfInterpreterContext; const text: string);
+    procedure InsertHyperlink(context: TRtfInterpreterContext; const URL: string);
     procedure InsertSpecialChar(context: TRtfInterpreterContext; kind: TRtfVisualSpecialCharKind);
     procedure InsertBreak(context: TRtfInterpreterContext; kind: TRtfVisualBreakKind);
     procedure InsertImage(context: TRtfInterpreterContext; format: TRtfImageFormat;
@@ -41,6 +43,7 @@ type
     fPendingTextFormat: TRtfTextFormat;
     fPendingText: TStringBuilder;
     fPendingIndent: TRtfIndent;
+    fPendingURL: string;
     fCurCellDefs: TRtfTableCellDefs;
     fCurCellDef: TRtfTableCellDef;
     fCurCell: TRtfTableCell;
@@ -58,6 +61,7 @@ type
   protected
     procedure DoBeginDocument(AContext: TRtfInterpreterContext); override;
     procedure DoInsertText(AContext: TRtfInterpreterContext; const AText: string); override;
+    procedure DoInsertHyperlink(context: TRtfInterpreterContext; const URL: string); override;
     procedure DoInsertSpecialChar(AContext: TRtfInterpreterContext; AKind: TRtfVisualSpecialCharKind); override;
     procedure DoInsertBreak(AContext: TRtfInterpreterContext; AKind: TRtfVisualBreakKind); override;
     procedure DoInsertImage(AContext: TRtfInterpreterContext; AFormat: TRtfImageFormat;
@@ -98,6 +102,13 @@ procedure TRtfInterpreterListener.InsertText(context: TRtfInterpreterContext;
 begin
   if Assigned(context) then
     DoInsertText(context, text);
+end;
+
+procedure TRtfInterpreterListener.InsertHyperlink(context: TRtfInterpreterContext;
+  const URL: string);
+begin
+  if Assigned(context) then
+    DoInsertHyperlink(context, URL);
 end;
 
 procedure TRtfInterpreterListener.InsertSpecialChar(
@@ -143,6 +154,11 @@ procedure TRtfInterpreterListener.DoInsertText(context: TRtfInterpreterContext;
 begin
 end;
 
+procedure TRtfInterpreterListener.DoInsertHyperlink(context: TRtfInterpreterContext;
+  const URL: string);
+begin
+end;
+
 procedure TRtfInterpreterListener.DoInsertSpecialChar(context: TRtfInterpreterContext;
   kind: TRtfVisualSpecialCharKind);
 begin
@@ -174,6 +190,7 @@ begin
   fPendingTextFormat := nil;
   fPendingText := TStringBuilder.Create;
   fPendingIndent := TRtfIndent.Create;
+  fPendingURL := '';
   fCurCell := TRtfTableCell.Create;
   fCurCellDef := TRtfTableCellDef.Create;
   fCurCellDefs := nil;
@@ -326,7 +343,7 @@ begin
   if fInTable then
   begin
     TableText := TRtfVisualText.Create(Atext, AContext.GetSafeCurrentTextFormat,
-      AContext.Indent, true);
+      AContext.Indent, AContext.URL, true);
     if fTableNesting then
       fCurCellObjList.Add(TableText)
     else
@@ -347,7 +364,7 @@ begin
   end
   else
     AppendAlignedVisual(TRtfVisualText.Create(AText, AContext.CurrentTextFormat,
-      AContext.Indent));
+      AContext.Indent, AContext.URL));
 end;
 
 procedure TRtfInterpreterListenerDocumentBuilder.DoInsertSpecialChar(
@@ -388,6 +405,15 @@ begin
     if AKind in [rvbParagraph, rvbSection] then
       EndParagraph(AContext);
   end;
+end;
+
+procedure TRtfInterpreterListenerDocumentBuilder.DoInsertHyperlink(
+  context: TRtfInterpreterContext; const URL: string);
+begin
+  if fInTable then
+    context.URL := URL
+  else
+    fPendingURL := URL;
 end;
 
 procedure TRtfInterpreterListenerDocumentBuilder.DoInsertImage(AContext: TRtfInterpreterContext;
@@ -476,10 +502,11 @@ begin
   if Assigned(fPendingTextFormat) and (fPendingText.Length > 0) then
   begin
     AppendAlignedVisual(TRtfVisualText.Create(fPendingText.ToString,
-      fPendingTextFormat, fPendingIndent));
+      fPendingTextFormat, fPendingIndent, fPendingURL));
     FreeAndNil(fPendingTextFormat);
     fPendingText.Clear;
     fPendingIndent.Reset;
+    fPendingURL := '';
   end;
 end;
 

@@ -94,7 +94,7 @@ constructor TRtf2Html.Create(AOwner: TComponent);
 begin
   inherited;
   fStringStream := TStringStream.Create;
-  fConvertVisualHyperlinks := false;
+  fConvertVisualHyperlinks := true;
   fUseNonBreakingSpaces := false;
   fShowHiddenText := false;
   fVisualHyperlinkPattern := DefaultVisualHyperlinkPattern;

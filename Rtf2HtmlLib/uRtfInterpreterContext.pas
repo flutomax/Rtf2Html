@@ -24,6 +24,7 @@ type
     fDocumentInfo: TRtfDocumentInfo;
     fUserProperties: TRtfDocumentPropertyCollection;
     fIndent: TRtfIndent;
+    fURL: string;
     function GetDefaultFont: TRtfFont;
     function GetCurrentTextFormat: TRtfTextFormat;
     procedure SetCurrentTextFormat(Value: TRtfTextFormat);
@@ -48,6 +49,7 @@ type
     property CurrentTextFormat: TRtfTextFormat read GetCurrentTextFormat write SetCurrentTextFormat;
     property DocumentInfo: TRtfDocumentInfo read fDocumentInfo;
     property Indent: TRtfIndent read fIndent;
+    property URL: string read fURL write fURL;
     property UserProperties: TRtfDocumentPropertyCollection read fUserProperties;
   end;
 

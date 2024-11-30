@@ -258,6 +258,11 @@ const
   TagBorderColor = 'brdrcf';
   TagBorderWidth = 'brdrw';
 
+  // field
+  TagFieldType = 'field';
+  TagFieldInstructions = 'fldinst';
+  TagFieldResult = 'fldrslt';
+
 
 function GetCodePage(charset: Integer): Integer;
 

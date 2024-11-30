@@ -30,6 +30,7 @@ type
       desiredWidth, desiredHeight, scaleWidthPercent, scaleHeightPercent: Integer;
       const imageDataHex: string);
     procedure NotifyHandleTable(kind: TRtfVisualTableKind; value: Integer = 0);
+    procedure NotifyInsertHyperlink(const URL: string);
     procedure NotifyEndDocument;
     property Context: TRtfInterpreterContext read fContext;
   public
@@ -50,6 +51,7 @@ type
     fDocumentInfoBuilder: TRtfDocumentInfoBuilder;
     fUserPropertyBuilder: TRtfUserPropertyBuilder;
     fImageBuilder: TRtfImageBuilder;
+    fHrefBuilder: TRtfHrefBuilder;
     fLastGroupWasPictureWrapper: Boolean;
   protected
     procedure InterpretContents(RtfDocument: TRtfGroup);
@@ -179,6 +181,14 @@ begin
     fListeners[i].InsertText(fContext, text);
 end;
 
+procedure TRtfInterpreterBase.NotifyInsertHyperlink(const URL: string);
+var
+  i: Integer;
+begin
+  for i := 0 to fListeners.Count - 1 do
+    fListeners[i].InsertHyperlink(fContext, URL);
+end;
+
 procedure TRtfInterpreterBase.NotifyInsertSpecialChar(kind: TRtfVisualSpecialCharKind);
 var
   i: Integer;
@@ -237,6 +247,7 @@ begin
   fDocumentInfoBuilder := TRtfDocumentInfoBuilder.Create(Context.DocumentInfo);
   fUserPropertyBuilder := TRtfUserPropertyBuilder.Create(Context.UserProperties);
   fImageBuilder := TRtfImageBuilder.Create;
+  fHrefBuilder := TRtfHrefBuilder.Create;
 end;
 
 destructor TRtfInterpreter.Destroy;
@@ -246,6 +257,7 @@ begin
   fDocumentInfoBuilder.Free;
   fUserPropertyBuilder.Free;
   fImageBuilder.Free;
+  fHrefBuilder.Free;
   inherited;
 end;
 
@@ -578,10 +590,10 @@ begin
           TagHeaderRight, TagFooter, TagFooterFirst, TagFooterLeft, TagFooterRight,
           TagFootnote, TagStyleSheet, TagPictureWrapper,
           TagPictureWrapperAlternative, TagPicture, TagParagraphNumberText,
-          TagListNumberText]) of
-        0: fUserPropertyBuilder.VisitGroup(group);
-        1: fDocumentInfoBuilder.VisitGroup(group);
-        2:
+          TagListNumberText, TagFieldInstructions]) of
+        0: fUserPropertyBuilder.VisitGroup(group); // TagUserProperties
+        1: fDocumentInfoBuilder.VisitGroup(group); // TagInfo
+        2: // TagUnicodeAlternativeChoices
         begin
           alt := group.SelectChildGroupWithDestination(TagUnicodeAlternativeUnicode);
           if Assigned(alt) then
@@ -596,33 +608,38 @@ begin
               VisitChildrenOf(awu);
           end;
         end;
-        3..12: ;
+        3..12: ; // TagHeader .. TagStyleSheet
         // groups we currently ignore, so their content doesn't intermix with
         // the actual document content
-        13:
+        13: // TagPictureWrapper
         begin
           VisitChildrenOf(group);
           fLastGroupWasPictureWrapper := true;
         end;
-        14:
+        14: // TagPictureWrapperAlternative
         begin
           if not fLastGroupWasPictureWrapper then
             VisitChildrenOf(group);
           fLastGroupWasPictureWrapper := false;
         end;
-        15:
+        15: // TagPicture
           with fImageBuilder do
           begin
             VisitGroup(group);
             NotifyInsertImage(Format, Width, Height, DesiredWidth, DesiredHeight,
               ScaleWidthPercent, ScaleHeightPercent, ImageDataHex);
           end;
-        16, 17:
+        16, 17: // TagParagraphNumberText, TagListNumberText
         begin
           NotifyInsertSpecialChar(rvsParagraphNumberBegin);
           VisitChildrenOf(group);
           NotifyInsertSpecialChar(rvsParagraphNumberEnd);
         end;
+        18: //TagFieldInstructions
+        begin
+          fHrefBuilder.VisitGroup(group);
+          NotifyInsertHyperlink(fHrefBuilder.URL);
+        end
       else
         if not group.IsExtensionDestination then
           VisitChildrenOf(group);

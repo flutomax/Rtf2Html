@@ -19,7 +19,7 @@ const
   DefaultDocumentHeader = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
   DefaultDocumentCharacterSet = 'UTF-8';
   DefaultVisualHyperlinkPattern = '[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,''/\\\+&%\$#\=~])*';
-DefaultHtmlFileExtension = '.html';
+  DefaultHtmlFileExtension = '.html';
   DefaultFileNamePattern = '%d%s';
 
 type
@@ -52,7 +52,8 @@ type
     fProperties: TStringList;
     fSelectorName: string;
   public
-    constructor Create(const ASelectorName: string);
+    constructor Create(const ASelectorName: string;
+      const AProperties: string = '');
     destructor Destroy; override;
     property Properties: TStringList read fProperties;
     property SelectorName: string read fSelectorName;
@@ -181,12 +182,15 @@ end;
 
 { TRtfHtmlCssStyle }
 
-constructor TRtfHtmlCssStyle.Create(const ASelectorName: string);
+constructor TRtfHtmlCssStyle.Create(const ASelectorName: string;
+  const AProperties: string);
 begin
   if ASelectorName.IsEmpty then
     raise EArgumentException.Create(sEmptySelectorName);
   fSelectorName := ASelectorName;
   fProperties := TStringList.Create;
+  if not AProperties.IsEmpty then
+    fProperties.Text := AProperties;
 end;
 
 destructor TRtfHtmlCssStyle.Destroy;
@@ -224,6 +228,7 @@ begin
   fVisualHyperlinkPattern := DefaultVisualHyperlinkPattern;
   fDocumentHeader := DefaultDocumentHeader;
   fCharacterSet := DefaultDocumentCharacterSet;
+  fStyles.Add(TRtfHtmlCssStyle.Create('p', 'margin=0'));
 end;
 
 destructor TRtfHtmlConvertSettings.Destroy;

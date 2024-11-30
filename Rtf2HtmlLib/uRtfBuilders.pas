@@ -145,9 +145,9 @@ type
     fImageDataHex: string;
     procedure Reset;
   protected
-    procedure DoVisitGroup(group: TRtfGroup); override;
-    procedure DoVisitTag(tag: TRtfTag); override;
-    procedure DoVisitText(text: TRtfText); override;
+    procedure DoVisitGroup(AGroup: TRtfGroup); override;
+    procedure DoVisitTag(ATag: TRtfTag); override;
+    procedure DoVisitText(AText: TRtfText); override;
   public
     constructor Create;
     property Format: TRtfImageFormat read fFormat;
@@ -160,11 +160,22 @@ type
     property ImageDataHex: string read fImageDataHex;
   end;
 
+  TRtfFieldType = (rftNone, rftInstr, rftResult);
+
+  TRtfHrefBuilder = class(TRtfElementVisitor)
+  private
+    fURL: string;
+  protected
+    procedure DoVisitText(AText: TRtfText); override;
+  public
+    constructor Create;
+    property URL: string read fURL;
+  end;
 
 implementation
 
 uses
-  System.StrUtils, System.DateUtils, uRtfSpec, uRtfMessages;
+  System.StrUtils, System.DateUtils, uRtfSpec, uRtfMessages, uRtfHtmlFunctions;
 
 { TRtfFontBuilder }
 
@@ -602,18 +613,18 @@ begin
   fImageDataHex := '';
 end;
 
-procedure TRtfImageBuilder.DoVisitGroup(group: TRtfGroup);
+procedure TRtfImageBuilder.DoVisitGroup(AGroup: TRtfGroup);
 begin
-  if group.Destination = TagPicture then
+  if AGroup.Destination = TagPicture then
   begin
     Reset;
-    VisitGroupChildren(group);
+    VisitGroupChildren(AGroup);
   end;
 end;
 
-procedure TRtfImageBuilder.DoVisitTag(tag: TRtfTag);
+procedure TRtfImageBuilder.DoVisitTag(ATag: TRtfTag);
 begin
-  case IndexStr(tag.Name, [TagPictureFormatWinDib, TagPictureFormatWinBmp,
+  case IndexStr(ATag.Name, [TagPictureFormatWinDib, TagPictureFormatWinBmp,
       TagPictureFormatEmf, TagPictureFormatJpg, TagPictureFormatPng,
       TagPictureFormatWmf, TagPictureWidth, TagPictureHeight, TagPictureWidthGoal,
       TagPictureHeightGoal, TagPictureWidthScale, TagPictureHeightScale]) of
@@ -624,35 +635,61 @@ begin
     5: fFormat := rifWmf;
     6:
     begin
-      fWidth := Abs(tag.ValueAsNumber);
+      fWidth := Abs(ATag.ValueAsNumber);
       fDesiredWidth := fWidth;
     end;
     7:
     begin
-      fHeight := Abs(tag.ValueAsNumber);
+      fHeight := Abs(ATag.ValueAsNumber);
       fDesiredHeight := fHeight;
     end;
     8:
     begin
-      fDesiredWidth := Abs(tag.ValueAsNumber);
+      fDesiredWidth := Abs(ATag.ValueAsNumber);
       if fWidth = 0 then
         fWidth := fDesiredWidth;
     end;
     9:
     begin
-      fDesiredHeight := Abs(tag.ValueAsNumber);
+      fDesiredHeight := Abs(ATag.ValueAsNumber);
       if fHeight = 0 then
         fHeight := fDesiredHeight;
     end;
-    10: fScaleWidthPercent := Abs(tag.ValueAsNumber);
-    11: fScaleHeightPercent := Abs(tag.ValueAsNumber);
+    10: fScaleWidthPercent := Abs(ATag.ValueAsNumber);
+    11: fScaleHeightPercent := Abs(ATag.ValueAsNumber);
   end;
 end;
 
-procedure TRtfImageBuilder.DoVisitText(text: TRtfText);
+procedure TRtfImageBuilder.DoVisitText(AText: TRtfText);
 begin
-  fImageDataHex := text.Text;
+  fImageDataHex := AText.Text;
 end;
 
+
+{ TRtfHrefBuilder }
+
+constructor TRtfHrefBuilder.Create;
+begin
+  inherited Create(rvDepthFirst);
+  fURL := '';
+end;
+
+procedure TRtfHrefBuilder.DoVisitText(AText: TRtfText);
+const
+  h = 'HYPERLINK';
+var
+  s: string;
+begin
+  if AText.Text.StartsWith(h, true) then
+  begin
+    s := Trim(Copy(AText.Text, Length(h) + 1, MaxInt));
+    if s.IsEmpty then
+      exit;
+    if s[1] = '"' then
+      fURL := TextBetweenQuotes(s, '"')
+    else
+      fURL := s;
+  end;
+end;
 
 end.

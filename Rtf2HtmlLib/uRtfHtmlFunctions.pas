@@ -6,6 +6,7 @@ uses
   Winapi.Windows, System.SysUtils, Vcl.Graphics, uRtfObjects, uRtfVisual,
   uRtfHtmlObjects;
 
+function TextBetweenQuotes(const s: string; quote: char): string;
 function EncodeUrl(const url: string): string;
 function HtmlEncodeString(const s: string): string;
 function HtmlEncodeAttr(const s: string; NonBreakingSpaces: boolean = false): string;
@@ -183,6 +184,20 @@ begin
   result := StringReplace(result, '''', '&apos;', [rfReplaceAll]);
   if NonBreakingSpaces then
     result := StringReplace(result, ' ', '&nbsp;', [rfReplaceAll]);
+end;
+
+function TextBetweenQuotes(const s: string; quote: char): string;
+var
+  p, p1: integer;
+begin
+  result := '';
+  p := Pos(quote, s);
+  if p > 0 then
+  begin
+    p1 := Pos(quote, s, p + 1);
+    if p1 > 0 then
+      Result := Copy(s, p + 1, p1 - p - 1);
+  end;
 end;
 
 function IsUncSharePath(const path: string): Boolean;

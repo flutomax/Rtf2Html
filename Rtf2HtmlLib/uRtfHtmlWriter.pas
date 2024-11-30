@@ -663,8 +663,8 @@ begin
           fWriter.Write(EqualsDoubleQuoteString);
           AttrValue := attr.Value;
           if attr.IsUrl then
-            if (attr.Key <> twaHref) or (not AttrValue.StartsWith('javascript:', true)) then
-              AttrValue := EncodeUrl(attrValue);
+            if attr.Key <> twaHref then
+              AttrValue := EncodeUrl(AttrValue);
           if attr.Encode then
             WriteHtmlAttributeEncode(AttrValue)
           else
