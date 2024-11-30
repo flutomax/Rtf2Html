@@ -624,24 +624,24 @@ begin
     BeginParagraph(aVisualText.Indent);
   // visual hyperlink
   IsHyperlink := false;
-  if fSettings.ConvertVisualHyperlinks then
-  begin
-    href := ConvertVisualHyperlink(aVisualText.Text);
-    if not href.IsEmpty then
-    begin
-      IsHyperlink := true;
-      fWriter.AddAttribute(twaHref, href);
-      RenderATag;
-    end;
-  end
-  else
   // make hyperlink
   if not aVisualText.URL.IsEmpty then
   begin
     IsHyperlink := true;
     fWriter.AddAttribute(twaHref, aVisualText.URL, false);
     RenderATag;
-  end;
+  end
+  else
+    if fSettings.ConvertVisualHyperlinks then
+    begin
+      href := ConvertVisualHyperlink(aVisualText.Text);
+      if not href.IsEmpty then
+      begin
+        IsHyperlink := true;
+        fWriter.AddAttribute(twaHref, href, false);
+        RenderATag;
+      end;
+    end;
 
   // format tags
   if TextFormat.IsBold then
