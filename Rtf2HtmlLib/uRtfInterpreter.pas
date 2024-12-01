@@ -30,7 +30,7 @@ type
       desiredWidth, desiredHeight, scaleWidthPercent, scaleHeightPercent: Integer;
       const imageDataHex: string);
     procedure NotifyHandleTable(kind: TRtfVisualTableKind; value: Integer = 0);
-    procedure NotifyInsertHyperlink(const URL: string);
+    procedure NotifyInsertHyperlink(const Data: TRtfHrefData);
     procedure NotifyEndDocument;
     property Context: TRtfInterpreterContext read fContext;
   public
@@ -181,12 +181,12 @@ begin
     fListeners[i].InsertText(fContext, text);
 end;
 
-procedure TRtfInterpreterBase.NotifyInsertHyperlink(const URL: string);
+procedure TRtfInterpreterBase.NotifyInsertHyperlink(const Data: TRtfHrefData);
 var
   i: Integer;
 begin
   for i := 0 to fListeners.Count - 1 do
-    fListeners[i].InsertHyperlink(fContext, URL);
+    fListeners[i].InsertHyperlink(fContext, Data);
 end;
 
 procedure TRtfInterpreterBase.NotifyInsertSpecialChar(kind: TRtfVisualSpecialCharKind);
@@ -361,7 +361,7 @@ begin
           TagAlignRight, TagAlignJustify, TagColorBackground,
           TagColorBackgroundWord, TagColorHighlight, TagColorForeground,
           TagSection, TagParagraph, TagLine, TagPage, TagTabulator, TagTilde,
-          TagEmDash, TagEnDash, TagEmSpace, TagEnSpace, TagQmSpace, TagBulltet,
+          TagEmDash, TagEnDash, TagEmSpace, TagEnSpace, TagQmSpace, TagBullet,
           TagLeftSingleQuote, TagRightSingleQuote, TagLeftDoubleQuote,
           TagRightDoubleQuote, TagHyphen, TagUnderscore, TagFirstLineIndent,
           TagLeftIndent, TagRightIndent, TagTableRowDefaults, TagTableRowBreak,
@@ -371,7 +371,8 @@ begin
           TagTableCellBorderRight, TagBorderNone, TagBorderColor, TagBorderWidth,
           TagTableCellVerticalAlignTop, TagTableCellVerticalAlignCenter,
           TagTableCellVerticalAlignBottom, TagTableInTable,
-          TagTableCellBackgroundColor, TagTableNestingLevel]) of
+          TagTableCellBackgroundColor, TagTableNestingLevel, TagSpaceAfter,
+          TagSpaceBefore, TagSpaceBetweenLines]) of
 
         0: Context.ApplyCurrentTextFormat(Context.CurrentTextFormat.DeriveNormal);
         1, 2: // TagParagraphDefaults, TagSectionDefaults
@@ -537,6 +538,9 @@ begin
         63: NotifyHandleTable(rvtTableInTable); // TagTableInTable
         64: NotifyHandleTable(rvtTableCellBackgroundColor, tag.ValueAsNumber); // TagTagTableCellBackgroundColor
         65: NotifyHandleTable(rvtTableNestingLevel, tag.ValueAsNumber); // TagTableNestingLevel
+        66: Context.Indent.SpaceAfter := tag.ValueAsNumber; // TagSpaceAfter
+        67: Context.Indent.SpaceBefore := tag.ValueAsNumber; // TagSpaceBefore
+        68: Context.Indent.SpaceBetweenLines := tag.ValueAsNumber; // TagSpaceBetweenLines
       end;
   end;
 end;
@@ -590,7 +594,7 @@ begin
           TagHeaderRight, TagFooter, TagFooterFirst, TagFooterLeft, TagFooterRight,
           TagFootnote, TagStyleSheet, TagPictureWrapper,
           TagPictureWrapperAlternative, TagPicture, TagParagraphNumberText,
-          TagListNumberText, TagFieldInstructions]) of
+          TagListNumberText, TagFieldType]) of
         0: fUserPropertyBuilder.VisitGroup(group); // TagUserProperties
         1: fDocumentInfoBuilder.VisitGroup(group); // TagInfo
         2: // TagUnicodeAlternativeChoices
@@ -635,10 +639,11 @@ begin
           VisitChildrenOf(group);
           NotifyInsertSpecialChar(rvsParagraphNumberEnd);
         end;
-        18: //TagFieldInstructions
+        18: //TagFieldType
         begin
           fHrefBuilder.VisitGroup(group);
-          NotifyInsertHyperlink(fHrefBuilder.URL);
+          VisitChildrenOf(group);
+          NotifyInsertHyperlink(fHrefBuilder.Data);
         end
       else
         if not group.IsExtensionDestination then

@@ -130,11 +130,31 @@ type
     function GetSettings: string;
   end;
 
+
 implementation
 
 uses
   System.Math, System.TypInfo, uRtfHash, uRtfMessages;
 
+const
+  cSpecialChars: array[TRtfVisualSpecialCharKind] of string = (
+    '&#9;', // rvsTabulator
+    '', // rvsParagraphNumberBegin
+    '', // rvsParagraphNumberEnd
+    '&nbsp;', // rvsNonBreakingSpace
+    '&mdash;', // rvsEmDash
+    '&ndash;', // rvsEnDash
+    '&emsp;', // rvsEmSpace
+    '&ensp;', // rvsEnSpace
+    '&thinsp;', // rvsQmSpace
+    '&bull;', // rvsBullet
+    '&lsquo;', // rvsLeftSingleQuote
+    '&rsquo;', // rvsRightSingleQuote
+    '&ldquo;', // rvsLeftDoubleQuote
+    '&rdquo;', // rvsRightDoubleQuote
+    '-', // rvsOptionalHyphen
+    '_' // rvsNonBreakingHyphen
+    );
 
 { TRtfHtmlStyle }
 
@@ -350,7 +370,12 @@ var
 begin
   Clear;
   if settings = '' then
+  begin
+    for kind := Low(TRtfVisualSpecialCharKind) to
+      High(TRtfVisualSpecialCharKind) do
+        Add(kind, cSpecialChars[kind]);
     exit;
+  end;
 
   items := settings.Split([',']);
   for item in items do

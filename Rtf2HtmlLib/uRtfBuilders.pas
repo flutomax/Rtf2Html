@@ -160,16 +160,16 @@ type
     property ImageDataHex: string read fImageDataHex;
   end;
 
-  TRtfFieldType = (rftNone, rftInstr, rftResult);
-
   TRtfHrefBuilder = class(TRtfElementVisitor)
   private
-    fURL: string;
+    fData: TRtfHrefData;
+    fUrlLookup: Boolean;
   protected
     procedure DoVisitText(AText: TRtfText); override;
+    procedure DoVisitGroup(AGroup: TRtfGroup); override;
   public
     constructor Create;
-    property URL: string read fURL;
+    property Data: TRtfHrefData read fData;
   end;
 
 implementation
@@ -670,8 +670,22 @@ end;
 
 constructor TRtfHrefBuilder.Create;
 begin
-  inherited Create(rvDepthFirst);
-  fURL := '';
+  inherited Create(rvNonRecursive);
+  fData.Reset;
+end;
+
+procedure TRtfHrefBuilder.DoVisitGroup(AGroup: TRtfGroup);
+begin
+  case IndexStr(AGroup.Destination, [TagFieldType, TagFieldInstructions,
+    TagFieldResult]) of
+    0, 2: fUrlLookup := false;
+    1:
+    begin
+      fData.Reset;
+      fUrlLookup := true;
+    end;
+  end;
+  VisitGroupChildren(AGroup);
 end;
 
 procedure TRtfHrefBuilder.DoVisitText(AText: TRtfText);
@@ -680,16 +694,19 @@ const
 var
   s: string;
 begin
-  if AText.Text.StartsWith(h, true) then
+  if fUrlLookup and AText.Text.StartsWith(h, true) then
   begin
     s := Trim(Copy(AText.Text, Length(h) + 1, MaxInt));
     if s.IsEmpty then
       exit;
     if s[1] = '"' then
-      fURL := TextBetweenQuotes(s, '"')
+      fData.URL := TextBetweenQuotes(s, '"')
     else
-      fURL := s;
-  end;
+      fData.URL := s;
+  end
+  else
+    fData.Text := AText.Text;
 end;
+
 
 end.

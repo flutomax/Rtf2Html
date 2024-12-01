@@ -99,6 +99,11 @@ const
   TagLeftIndent = 'li';
   TagRightIndent = 'ri';
 
+  // --- space ---
+  TagSpaceAfter = 'sa';
+  TagSpaceBefore = 'sb';
+  TagSpaceBetweenLines = 'sl';
+
   // --- special character ----
   TagPage = 'page';
   TagSection = 'sect';
@@ -111,7 +116,7 @@ const
   TagEmSpace = 'emspace';
   TagEnSpace = 'enspace';
   TagQmSpace = 'qmspace';
-  TagBulltet = 'bullet';
+  TagBullet = 'bullet';
   TagLeftSingleQuote = 'lquote';
   TagRightSingleQuote = 'rquote';
   TagLeftDoubleQuote = 'ldblquote';

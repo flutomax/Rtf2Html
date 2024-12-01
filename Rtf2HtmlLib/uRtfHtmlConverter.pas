@@ -21,6 +21,7 @@ type
     fWriter: THtmlTextWriter;
     fLastVisual: TRtfVisual;
     fIsInParagraphNumber: Boolean;
+    fIsSpecialCharacter: Boolean;
     fHyperlinkRegEx: TRegEx;
     fGenerator: string;
     function ConvertVisualHyperlink(text: string): string;
@@ -568,11 +569,17 @@ begin
   with Indent do
   begin
     if FirstIndent <> 0 then
-      fWriter.AddStyleAttribute(twsTextIndent, Format('%dpx', [TwipToPixel(FirstIndent)]));
+      fWriter.AddStyleAttribute(twsTextIndent, Format('%dpt', [TwipToPoint(FirstIndent)]));
     if LeftIndent <> 0 then
-      fWriter.AddStyleAttribute(twsMarginLeft, Format('%dpx', [TwipToPixel(LeftIndent)]));
+      fWriter.AddStyleAttribute(twsMarginLeft, Format('%dpt', [TwipToPoint(LeftIndent)]));
     if RightIndent <> 0 then
-      fWriter.AddStyleAttribute(twsMarginRight, Format('%dpx', [TwipToPixel(RightIndent)]));
+      fWriter.AddStyleAttribute(twsMarginRight, Format('%dpt', [TwipToPoint(RightIndent)]));
+    if SpaceBefore.HasValue then
+      fWriter.AddStyleAttribute(twsMarginTop, Format('%dpt', [TwipToPoint(SpaceBefore.Value)]));
+    if SpaceAfter.HasValue then
+      fWriter.AddStyleAttribute(twsMarginBottom, Format('%dpt', [TwipToPoint(SpaceAfter.Value)]));
+    if SpaceBetweenLines.HasValue then
+      fWriter.AddStyleAttribute(twsLineHeight, Format('%dpt', [TwipToPoint(SpaceBetweenLines.Value)]));
   end;
   RenderPTag;
 end;
@@ -582,6 +589,7 @@ begin
   if not IsInParagraph then
     exit;
   RenderEndTag(true);
+  fIsSpecialCharacter := false;
 end;
 
 function TRtfHtmlConverter.FormatHtmlText(Text: string): string;
@@ -620,15 +628,16 @@ begin
         fWriter.AddStyleAttribute(twsTextAlign, 'justify');
     end;
 
-  if (not IsInListItem) and (not aVisualText.IsInTable) then
+  if (not IsInListItem) and (not fIsSpecialCharacter) and (not aVisualText.IsInTable) then
     BeginParagraph(aVisualText.Indent);
   // visual hyperlink
   IsHyperlink := false;
   // make hyperlink
-  if not aVisualText.URL.IsEmpty then
+  if (not aVisualText.HrefData.URL.IsEmpty) and
+    (aVisualText.HrefData.Text = aVisualText.Text) then
   begin
     IsHyperlink := true;
-    fWriter.AddAttribute(twaHref, aVisualText.URL, false);
+    fWriter.AddAttribute(twaHref, aVisualText.HrefData.URL, false);
     RenderATag;
   end
   else
@@ -757,7 +766,10 @@ begin
     rvsParagraphNumberEnd: fIsInParagraphNumber := false;
   else
     if fSpecialCharacters.ContainsKey(aVisualSpecialChar.CharKind) then
+    begin
       fWriter.Write(fSpecialCharacters[aVisualSpecialChar.CharKind]);
+      fIsSpecialCharacter := true;
+    end;
   end;
 
   LeaveVisual(aVisualSpecialChar);
@@ -868,7 +880,7 @@ begin
     pts.Sort;
 
     mw := TwipToPixel(pts.Last - pts.First);
-    s := Format('margin-left:%d; border-collapse: collapse;', [TwipToPixel(pts.First)]);
+    s := Format('margin-left:%dpx; border-collapse: collapse;', [TwipToPixel(pts.First)]);
     fWriter.AddAttribute(twaBorder, '0');
     fWriter.AddAttribute(twaWidth, mw.ToString);
     fWriter.AddAttribute(twaStyle, s);

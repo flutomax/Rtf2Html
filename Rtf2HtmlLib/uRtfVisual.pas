@@ -70,7 +70,7 @@ type
   TRtfVisualText = class(TRtfVisual)
   private
     fText: string;
-    fURL: string;
+    fHrefData: TRtfHrefData;
     fFormat: TRtfTextFormat;
   protected
     procedure DoVisit(visitor: TRtfVisualVisitor); override;
@@ -79,12 +79,13 @@ type
   public
     constructor Create(src: TRtfVisualText); overload;
     constructor Create(const aText: string; aFormat: TRtfTextFormat;
-      aIndent: TRtfIndent; aURL: string = ''; aInTable: Boolean = false); overload;
+      aIndent: TRtfIndent; const aHrefData: TRtfHrefData;
+      aInTable: Boolean = false); overload;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
     function ToString: string; override;
     property Text: string read fText;
-    property URL: string read fURL;
+    property HrefData: TRtfHrefData read fHrefData;
     property Format: TRtfTextFormat read fFormat write fFormat;
   end;
 
@@ -285,7 +286,7 @@ begin
 end;
 
 constructor TRtfVisualText.Create(const aText: string; aFormat: TRtfTextFormat;
-  aIndent: TRtfIndent; aURL: string; aInTable: Boolean);
+  aIndent: TRtfIndent; const aHrefData: TRtfHrefData; aInTable: Boolean);
 begin
   inherited Create(rvkText, aInTable);
   fIndent.Assign(aIndent);
@@ -294,7 +295,7 @@ begin
   if aFormat = nil then
     raise EArgumentNilException.Create(sNilFormat);
   fText := aText;
-  fURL := aURL;
+  fHrefData := aHrefData;
   fFormat := TRtfTextFormat.Create(aFormat);
   fIsInTable := aInTable;
 end;
@@ -327,7 +328,7 @@ begin
   if Source is TRtfVisualText then
   begin
     fText := TRtfVisualText(Source).fText;
-    fURL := TRtfVisualText(Source).fURL;
+    fHrefData := TRtfVisualText(Source).fHrefData;
     fFormat.Assign(TRtfVisualText(Source).fFormat);
   end;
 end;

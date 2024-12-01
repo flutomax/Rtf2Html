@@ -10,6 +10,12 @@ type
 
   TRtfObject = class(TPersistent);
 
+  TRtfHrefData = record
+    URL: string;
+    Text: string;
+    procedure Reset;
+  end;
+
   TColorHelper = record helper for TColor
   private
     function GetColorRef: TColorRef; inline;
@@ -168,6 +174,9 @@ type
     fFirstIndent: Integer;
     fLeftIndent: Integer;
     fRightIndent: Integer;
+    fSpaceBefore: TIntNullable;
+    fSpaceAfter: TIntNullable;
+    fSpaceBetweenLines: TIntNullable;
     function GetIsEmpty: Boolean;
   public
     constructor Create;
@@ -178,6 +187,10 @@ type
     property FirstIndent: Integer read fFirstIndent write fFirstIndent;
     property LeftIndent: Integer read fLeftIndent write fLeftIndent;
     property RightIndent: Integer read fRightIndent write fRightIndent;
+    property SpaceBefore: TIntNullable read fSpaceBefore write fSpaceBefore;
+    property SpaceAfter: TIntNullable read fSpaceAfter write fSpaceAfter;
+    property SpaceBetweenLines: TIntNullable read fSpaceBetweenLines
+      write fSpaceBetweenLines;
   end;
 
 
@@ -295,6 +308,13 @@ uses
   uRtfMessages, uRtfVisual;
 
 
+{ TRtfHrefData }
+
+procedure TRtfHrefData.Reset;
+begin
+  URL := '';
+  Text := '';
+end;
 
 { TColorHelper }
 
@@ -886,6 +906,9 @@ begin
   fFirstIndent := 0;
   fLeftIndent := 0;
   fRightIndent := 0;
+  fSpaceBefore := nil;
+  fSpaceAfter := nil;
+  fSpaceBetweenLines := nil;
 end;
 
 procedure TRtfIndent.Assign(Source: TPersistent);
@@ -895,6 +918,9 @@ begin
     fFirstIndent := TRtfIndent(Source).fFirstIndent;
     fLeftIndent := TRtfIndent(Source).fLeftIndent;
     fRightIndent := TRtfIndent(Source).fRightIndent;
+    fSpaceBefore := TRtfIndent(Source).fSpaceBefore;
+    fSpaceAfter := TRtfIndent(Source).fSpaceAfter;
+    fSpaceBetweenLines := TRtfIndent(Source).fSpaceBetweenLines;
   end
   else
     inherited;
@@ -1201,5 +1227,6 @@ begin
   for i := 0 to Source.Count - 1 do
     Add(TRtfTableRow.Create(Source[i]));
 end;
+
 
 end.

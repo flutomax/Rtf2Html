@@ -14,6 +14,7 @@ function ColorToHtml(Color: TColor): string;
 function TextToHtml(VisualText: TRtfVisualText): TRtfHtmlStyle;
 function TextToBinary(HexStr: string): TBytes;
 function TwipToPixel(const x: integer): integer;
+function TwipToPoint(const x: integer): integer;
 
 implementation
 
@@ -295,6 +296,11 @@ end;
 function TwipToPixel(const x: integer): integer;
 begin
   result := Round(x * 96.0 / 1440);
+end;
+
+function TwipToPoint(const x: integer): integer;
+begin
+  result := Round(x / 20);
 end;
 
 end.

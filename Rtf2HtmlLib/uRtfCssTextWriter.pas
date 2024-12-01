@@ -12,7 +12,7 @@ type
     twsBorderStyle, twsBorderWidth, twsColor, twsFontFamily, twsFontSize,
     twsFontStyle, twsFontWeight, twsHeight, twsTextDecoration, twsWidth,
     twsListStyleImage, twsListStyleType, twsCursor, twsDirection, twsDisplay,
-    twsFilter, twsFontVariant, twsLeft, twsMargin, twsMarginBottom,
+    twsFilter, twsFontVariant, twsLeft, twsLineHeight, twsMargin, twsMarginBottom,
     twsMarginLeft, twsMarginRight, twsMarginTop, twsOverflow, twsOverflowX,
     twsOverflowY, twsPadding, twsPaddingBottom, twsPaddingLeft, twsPaddingRight,
     twsPaddingTop, twsPosition, twsTextAlign, twsVerticalAlign, twsTextOverflow,
@@ -107,6 +107,7 @@ begin
   RegisterAttribute('font-weight', twsFontWeight);
   RegisterAttribute('height', twsHeight);
   RegisterAttribute('left', twsLeft);
+  RegisterAttribute('line-height', twsLineHeight);
   RegisterAttribute('list-style-image', twsListStyleImage, true, true);
   RegisterAttribute('list-style-type', twsListStyleType);
   RegisterAttribute('margin', twsMargin);
