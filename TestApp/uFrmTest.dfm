@@ -33,8 +33,6 @@ object FrmTest: TFrmTest
     Align = alBottom
     ItemHeight = 13
     TabOrder = 0
-    ExplicitTop = 252
-    ExplicitWidth = 576
   end
   object PnlToolbar: TPanel
     Left = 0
@@ -44,7 +42,6 @@ object FrmTest: TFrmTest
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 576
     object Button3: TButton
       Left = 8
       Top = 9
@@ -82,8 +79,6 @@ object FrmTest: TFrmTest
     ScrollBars = ssBoth
     TabOrder = 2
     Zoom = 100
-    ExplicitWidth = 576
-    ExplicitHeight = 208
   end
   object ActionList1: TActionList
     Images = ImageList1
@@ -106,7 +101,7 @@ object FrmTest: TFrmTest
     Left = 276
     Top = 92
     Bitmap = {
-      494C010103000800580010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101030008005C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

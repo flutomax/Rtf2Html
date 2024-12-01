@@ -121,8 +121,16 @@ end;
 { TFrmTest }
 
 procedure TFrmTest.FormCreate(Sender: TObject);
+var
+  rs: TResourceStream;
 begin
-  ReportMemoryLeaksOnShutdown := true;
+  //ReportMemoryLeaksOnShutdown := true;
+  rs := TResourceStream.Create(hInstance, 'TEST_RTF', RT_RCDATA);
+  try
+    Editor.Lines.LoadFromStream(rs);
+  finally
+    rs.Free;
+  end;
 end;
 
 procedure TFrmTest.FormShow(Sender: TObject);
@@ -163,6 +171,7 @@ begin
   try
     Editor.Lines.SaveToStream(Stream);
     Stream.Position := 0;
+    Rtf2Html.Title := 'RTF2HTML conversion example';
     Rtf2Html.OnLogMessage := Add2Log;
     Rtf2Html.OutputFileName := DlgSaveHtml.FileName;
     Rtf2Html.LoadFromStream(Stream);
